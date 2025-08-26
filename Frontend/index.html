@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Insights Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <i data-lucide="trending-up"></i>
+            <span>CustomerIQ</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="index.html" class="nav-link active" data-page="dashboard">
+                <i data-lucide="home"></i>Dashboard
+            </a></li>
+            <li><a href="pages/analytics.html" class="nav-link" data-page="analytics">
+                <i data-lucide="bar-chart-3"></i>Analytics
+            </a></li>
+            <li><a href="pages/prediction.html" class="nav-link" data-page="prediction">
+                <i data-lucide="brain"></i>Predictions
+            </a></li>
+            <li><a href="pages/segments.html" class="nav-link" data-page="segments">
+                <i data-lucide="users"></i>Segments
+            </a></li>
+            <li><a href="pages/recommendations.html" class="nav-link" data-page="recommendations">
+                <i data-lucide="target"></i>Recommendations
+            </a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1>Executive Dashboard</h1>
+            <p>High-level insights and KPIs for strategic decision making</p>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Total Customers</p>
+                        <span class="trend positive">+5.2% vs last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <i data-lucide="user-minus"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="churnRate">0%</h3>
+                        <p>Churn Rate</p>
+                        <span class="trend negative">+1.3% vs last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i data-lucide="dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avgRevenue">$0</h3>
+                        <p>Avg Monthly Revenue</p>
+                        <span class="trend positive">+8.1% vs last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i data-lucide="calendar"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avgTenure">0</h3>
+                        <p>Avg Tenure (months)</p>
+                        <span class="trend neutral">+0.2% vs last month</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-card">
+                    <h3>Churn Rate Trend</h3>
+                    <canvas id="churnTrendChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Customer Segments</h3>
+                    <canvas id="segmentChart"></canvas>
+                </div>
+            </div>
+
+            <div class="insights-row">
+                <div class="insight-card">
+                    <h3>Quick Insights</h3>
+                    <div class="insights-grid">
+                        <div class="insight-item">
+                            <i data-lucide="alert-triangle"></i>
+                            <div>
+                                <h4>High Churn Risk</h4>
+                                <p id="highRiskCount">0 customers need attention</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <i data-lucide="trending-up"></i>
+                            <div>
+                                <h4>Upsell Opportunities</h4>
+                                <p id="upsellCount">0 customers ready for premium</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <i data-lucide="phone"></i>
+                            <div>
+                                <h4>Support Tickets</h4>
+                                <p id="supportTickets">0 open tickets this week</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <i data-lucide="star"></i>
+                            <div>
+                                <h4>Satisfaction Score</h4>
+                                <p id="satisfactionScore">0/5 average rating</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="activityList">
+                        <!-- Activity items will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="database/telco.js"></script>
+    <script src="database/support.js"></script>
+    <script src="database/cdr.js"></script>
+    <script src="api/customers.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            loadDashboardData();
+        });
+    </script>
+</body>
+</html>
