@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Segments - CustomerIQ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../assets/css/main.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <i data-lucide="trending-up"></i>
+            <span>CustomerIQ</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../index.html" class="nav-link" data-page="dashboard">
+                <i data-lucide="home"></i>Dashboard
+            </a></li>
+            <li><a href="analytics.html" class="nav-link" data-page="analytics">
+                <i data-lucide="bar-chart-3"></i>Analytics
+            </a></li>
+            <li><a href="prediction.html" class="nav-link" data-page="prediction">
+                <i data-lucide="brain"></i>Predictions
+            </a></li>
+            <li><a href="segments.html" class="nav-link active" data-page="segments">
+                <i data-lucide="users"></i>Segments
+            </a></li>
+            <li><a href="recommendations.html" class="nav-link" data-page="recommendations">
+                <i data-lucide="target"></i>Recommendations
+            </a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1>Customer Segments</h1>
+            <p>Visualize customer clusters and behavioral patterns</p>
+        </header>
+
+        <div class="segments-dashboard">
+            <!-- Segment Overview -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i data-lucide="heart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="loyalCount">0</h3>
+                        <p>Loyal Customers</p>
+                        <span class="trend positive">High retention, premium plans</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <i data-lucide="alert-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="atRiskCount">0</h3>
+                        <p>At-Risk Customers</p>
+                        <span class="trend negative">Require immediate attention</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i data-lucide="minus-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="neutralCount">0</h3>
+                        <p>Neutral Customers</p>
+                        <span class="trend neutral">Standard engagement level</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i data-lucide="trending-up"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avgLifetimeValue">$0</h3>
+                        <p>Avg Lifetime Value</p>
+                        <span class="trend positive">Across all segments</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cluster Visualization -->
+            <div class="visualization-section">
+                <div class="chart-card" style="grid-column: 1 / -1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <div>
+                            <h3>Customer Segment Clusters</h3>
+                            <p style="color: var(--gray-600); margin: 0;">Usage Score vs Satisfaction Score distribution</p>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-secondary" onclick="refreshClusters()">
+                                <i data-lucide="refresh-cw"></i>Refresh
+                            </button>
+                            <button class="btn btn-primary" onclick="exportSegmentData()">
+                                <i data-lucide="download"></i>Export
+                            </button>
+                        </div>
+                    </div>
+                    <canvas id="clusterChart" style="max-height: 500px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Segment Details -->
+            <div class="segment-details">
+                <div class="segment-card loyal">
+                    <div class="segment-header">
+                        <h3><i data-lucide="heart"></i>Loyal Customers</h3>
+                        <span class="segment-count" id="loyalDetailCount">0 customers</span>
+                    </div>
+                    <div class="segment-metrics">
+                        <div class="metric">
+                            <label>Avg Tenure</label>
+                            <value id="loyalTenure">0 months</value>
+                        </div>
+                        <div class="metric">
+                            <label>Avg Revenue</label>
+                            <value id="loyalRevenue">$0</value>
+                        </div>
+                        <div class="metric">
+                            <label>Churn Rate</label>
+                            <value id="loyalChurn">0%</value>
+                        </div>
+                    </div>
+                    <div class="segment-characteristics">
+                        <h4>Key Characteristics</h4>
+                        <ul>
+                            <li>High tenure (24+ months)</li>
+                            <li>Premium service plans</li>
+                            <li>Low support ticket volume</li>
+                            <li>High satisfaction scores</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="segment-card at-risk">
+                    <div class="segment-header">
+                        <h3><i data-lucide="alert-triangle"></i>At-Risk Customers</h3>
+                        <span class="segment-count" id="atRiskDetailCount">0 customers</span>
+                    </div>
+                    <div class="segment-metrics">
+                        <div class="metric">
+                            <label>Avg Tenure</label>
+                            <value id="atRiskTenure">0 months</value>
+                        </div>
+                        <div class="metric">
+                            <label>Avg Revenue</label>
+                            <value id="atRiskRevenue">$0</value>
+                        </div>
+                        <div class="metric">
+                            <label>Churn Rate</label>
+                            <value id="atRiskChurn">0%</value>
+                        </div>
+                    </div>
+                    <div class="segment-characteristics">
+                        <h4>Risk Factors</h4>
+                        <ul>
+                            <li>Short tenure (&lt; 12 months)</li>
+                            <li>Month-to-month contracts</li>
+                            <li>High support ticket volume</li>
+                            <li>Recent service issues</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="segment-card neutral">
+                    <div class="segment-header">
+                        <h3><i data-lucide="minus-circle"></i>Neutral Customers</h3>
+                        <span class="segment-count" id="neutralDetailCount">0 customers</span>
+                    </div>
+                    <div class="segment-metrics">
+                        <div class="metric">
+                            <label>Avg Tenure</label>
+                            <value id="neutralTenure">0 months</value>
+                        </div>
+                        <div class="metric">
+                            <label>Avg Revenue</label>
+                            <value id="neutralRevenue">$0</value>
+                        </div>
+                        <div class="metric">
+                            <label>Churn Rate</label>
+                            <value id="neutralChurn">0%</value>
+                        </div>
+                    </div>
+                    <div class="segment-characteristics">
+                        <h4>Opportunities</h4>
+                        <ul>
+                            <li>Moderate engagement levels</li>
+                            <li>Upsell potential for services</li>
+                            <li>Contract upgrade candidates</li>
+                            <li>Stable usage patterns</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .visualization-section {
+            margin: 2rem 0;
+        }
+
+        .segment-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .segment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid;
+        }
+
+        .segment-card.loyal {
+            border-left-color: var(--success);
+        }
+
+        .segment-card.at-risk {
+            border-left-color: var(--error);
+        }
+
+        .segment-card.neutral {
+            border-left-color: var(--warning);
+        }
+
+        .segment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .segment-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .segment-header i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .segment-count {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .segment-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 8px;
+        }
+
+        .metric label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric value {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .segment-characteristics h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.75rem;
+        }
+
+        .segment-characteristics ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .segment-characteristics li {
+            padding: 0.5rem 0;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .segment-characteristics li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+    </style>
+
+    <script src="../database/telco.js"></script>
+    <script src="../database/support.js"></script>
+    <script src="../database/cdr.js"></script>
+    <script src="../api/customers.js"></script>
+    <script src="../assets/js/charts.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+    <script>
+        let segmentData = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            loadSegmentData();
+        });
+
+        function loadSegmentData() {
+            const telcoData = window.telcoData || [];
+            const supportData = window.supportData || [];
+            
+            // Calculate segments
+            segmentData = calculateSegments(telcoData, supportData);
+            
+            // Update overview stats
+            updateOverviewStats();
+            
+            // Create cluster visualization
+            createClusterVisualization();
+            
+            // Update segment details
+            updateSegmentDetails();
+        }
+
+        function calculateSegments(telcoData, supportData) {
+            const segments = {
+                loyal: [],
+                atRisk: [],
+                neutral: []
+            };
+
+            telcoData.forEach(customer => {
+                // Calculate usage score (0-100)
+                const usageScore = Math.min(100, 
+                    (customer.monthly_charges / 100) * 50 + 
+                    (customer.tenure / 72) * 50
+                );
+
+                // Calculate satisfaction score (0-100)
+                const customerTickets = supportData.filter(t => t.customer_id === customer.customer_id);
+                const avgSatisfaction = customerTickets.length > 0 
+                    ? customerTickets.reduce((sum, t) => sum + (t.satisfaction_rating || 3), 0) / customerTickets.length
+                    : 4; // Default satisfaction
+                
+                const satisfactionScore = (avgSatisfaction / 5) * 100;
+
+                const customerData = {
+                    ...customer,
+                    usageScore: Math.round(usageScore),
+                    satisfactionScore: Math.round(satisfactionScore),
+                    supportTickets: customerTickets.length
+                };
+
+                // Segment logic
+                if (customer.tenure >= 24 && customer.churn === 'No' && satisfactionScore >= 70) {
+                    segments.loyal.push(customerData);
+                } else if (customer.tenure < 12 || customer.churn === 'Yes' || satisfactionScore < 50) {
+                    segments.atRisk.push(customerData);
+                } else {
+                    segments.neutral.push(customerData);
+                }
+            });
+
+            return segments;
+        }
+
+        function updateOverviewStats() {
+            document.getElementById('loyalCount').textContent = segmentData.loyal.length;
+            document.getElementById('atRiskCount').textContent = segmentData.atRisk.length;
+            document.getElementById('neutralCount').textContent = segmentData.neutral.length;
+
+            // Calculate average lifetime value
+            const allCustomers = [...segmentData.loyal, ...segmentData.atRisk, ...segmentData.neutral];
+            const avgLTV = allCustomers.length > 0 
+                ? allCustomers.reduce((sum, c) => sum + c.total_charges, 0) / allCustomers.length
+                : 0;
+            
+            document.getElementById('avgLifetimeValue').textContent = '$' + Math.round(avgLTV);
+        }
+
+        function createClusterVisualization() {
+            const ctx = document.getElementById('clusterChart')?.getContext('2d');
+            if (!ctx) return;
+
+            const data = {
+                datasets: [{
+                    label: 'Loyal Customers',
+                    data: segmentData.loyal.map(c => ({
+                        x: c.usageScore,
+                        y: c.satisfactionScore
+                    })),
+                    backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                    borderColor: '#10b981',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }, {
+                    label: 'At Risk Customers',
+                    data: segmentData.atRisk.map(c => ({
+                        x: c.usageScore,
+                        y: c.satisfactionScore
+                    })),
+                    backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                    borderColor: '#ef4444',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }, {
+                    label: 'Neutral Customers',
+                    data: segmentData.neutral.map(c => ({
+                        x: c.usageScore,
+                        y: c.satisfactionScore
+                    })),
+                    backgroundColor: 'rgba(245, 158, 11, 0.6)',
+                    borderColor: '#f59e0b',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'scatter',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Usage Score',
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                }
+                            },
+                            min: 0,
+                            max: 100
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Satisfaction Score',
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                }
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return 'Customer Details';
+                                },
+                                label: function(context) {
+                                    return [
+                                        `Segment: ${context.dataset.label}`,
+                                        `Usage Score: ${context.parsed.x}`,
+                                        `Satisfaction: ${context.parsed.y}`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'point'
+                    }
+                }
+            });
+        }
+
+        function updateSegmentDetails() {
+            updateSegmentCard('loyal', segmentData.loyal);
+            updateSegmentCard('atRisk', segmentData.atRisk);
+            updateSegmentCard('neutral', segmentData.neutral);
+        }
+
+        function updateSegmentCard(segment, customers) {
+            const prefix = segment === 'atRisk' ? 'atRisk' : segment;
+            
+            document.getElementById(`${prefix}DetailCount`).textContent = `${customers.length} customers`;
+            
+            if (customers.length > 0) {
+                const avgTenure = Math.round(customers.reduce((sum, c) => sum + c.tenure, 0) / customers.length);
+                const avgRevenue = Math.round(customers.reduce((sum, c) => sum + c.monthly_charges, 0) / customers.length);
+                const churnCount = customers.filter(c => c.churn === 'Yes').length;
+                const churnRate = ((churnCount / customers.length) * 100).toFixed(1);
+                
+                document.getElementById(`${prefix}Tenure`).textContent = `${avgTenure} months`;
+                document.getElementById(`${prefix}Revenue`).textContent = `$${avgRevenue}`;
+                document.getElementById(`${prefix}Churn`).textContent = `${churnRate}%`;
+            }
+        }
+
+        function refreshClusters() {
+            window.mainApp.showNotification('Refreshing cluster analysis...', 'info');
+            
+            setTimeout(() => {
+                loadSegmentData();
+                window.mainApp.showNotification('Clusters updated successfully!', 'success');
+            }, 1500);
+        }
+
+        function exportSegmentData() {
+            const exportData = {
+                summary: {
+                    loyal: segmentData.loyal.length,
+                    atRisk: segmentData.atRisk.length,
+                    neutral: segmentData.neutral.length,
+                    generated: new Date().toISOString()
+                },
+                segments: segmentData
+            };
+            
+            window.mainApp.downloadData(exportData, 'customer-segments', 'json');
+            window.mainApp.showNotification('Segment data exported successfully!', 'success');
+        }
+    </script>
+</body>
+</html>
