@@ -1,3 +1,18 @@
+/* React Page Layout Fixes */
+.dashboard-page,
+.analytics-page,
+.prediction-page,
+.segments-page,
+.recommendations-page {
+    min-height: 100vh;
+    background: var(--gray-50);
+}
+
+.main-content {
+    margin-left: 280px;
+    padding: 2rem 3rem;
+    transition: margin-left 0.3s;
+}
 :root {
     --primary-blue: #2563eb;
     --secondary-green: #059669;
