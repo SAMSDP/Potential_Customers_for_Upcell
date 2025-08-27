@@ -163,5 +163,5 @@ class CustomerAPI {
     }
 }
 
-// Make API available globally
+
 window.CustomerAPI = CustomerAPI;
