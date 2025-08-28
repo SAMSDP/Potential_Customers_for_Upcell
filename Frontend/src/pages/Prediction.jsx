@@ -42,7 +42,7 @@ const Prediction = () => {
           <div className="upload-section">
             <div className="chart-card" style={{textAlign: 'center', padding: '3rem'}}>
               <div style={{marginBottom: '2rem'}}>
-                <UploadCloud style={{width: 64, height: 64, color: 'var(--primary-blue)', marginBottom: 16}} />
+                <div style={{display: 'flex', gap: '1rem', justifyContent: 'center'}}><UploadCloud style={{width: 64, height: 64, color: 'var(--primary-blue)', marginBottom: 16}} /></div>
                 <h3>Upload CDR Data</h3>
                 <p style={{color: 'var(--gray-600)', marginBottom: '2rem'}}>
                   Upload CSV or Excel file with Call Detail Records for ML analysis
