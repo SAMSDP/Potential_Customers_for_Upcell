@@ -36,6 +36,181 @@
     background: rgba(239,68,68,0.08);
 }
 /* React Page Layout Fixes */
+/* Recommendations Page Modern Card Styles */
+.strategy-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.strategy-card {
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 2.2rem 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    border-left: 4px solid #e0e0e0;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+.strategy-card.loyal {
+    border-left: 4px solid #4caf50;
+}
+.strategy-card.at-risk {
+    border-left: 4px solid #f44336;
+}
+.strategy-card.neutral {
+    border-left: 4px solid #ff9800;
+}
+.strategy-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.strategy-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.7rem;
+}
+.strategy-header h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0;
+}
+.strategy-content p {
+    font-size: 1.05rem;
+    color: #444;
+    margin-bottom: 1.2rem;
+}
+.strategy-stats {
+    display: flex;
+    gap: 1.2rem;
+}
+.stat {
+    background: #f7f7fa; 
+    border-radius: 12px;
+    padding: 1.1rem 1.3rem;
+    text-align: center;
+    min-width: 120px;
+    flex: 1;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.loyal-card {
+    border-style: solid;
+    border-left: 4px solid #4caf50;
+    border-width: 0 0 0 16px;
+    border-color: #4caf50;
+    border-radius: 22px;
+    box-shadow: 0 4px 16px #4caf50;
+    padding: 2.2rem 2rem;
+    background: #fff;
+    margin-bottom: 2rem;
+}
+.at-risk-card {
+    border-style: solid;
+    border-left: 4px solid #f44336;
+    border-width: 0 0 0 16px;
+    border-color: #f44336;
+    border-radius: 22px;
+    box-shadow: 0 4px 16px #f44336;
+    padding: 2.2rem 2rem;
+    background: #fff;
+    margin-bottom: 2rem;
+}
+.neutral-card {
+    border-style: solid;
+    border-left: 4px solid #ff9800;
+    border-width: 0 0 0 16px;
+    border-color: #ff9800;
+    border-radius: 22px;
+    box-shadow: 0 4px 16px #ff9800;
+    padding: 2.2rem 2rem;
+    background: #fff;
+    margin-bottom: 2rem;
+}
+.segment-card .metric-value {
+    font-size: 1.5rem;
+}
+.segment-title {
+    font-size: 1.1rem;
+}
+.segment-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+    .segment-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.segment-card {
+    padding: 2.2rem 2rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    transition: box-shadow 0.2s;
+}
+.segment-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+.chart-card {
+    margin-bottom: 2.5rem;
+}
+
+
+.segment-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.segment-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.segment-count {
+    font-size: 1.1rem;
+    color: #444;
+    font-weight: 500;
+}
+
+.segment-metrics-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background: #f7f7fa;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    min-width: 120px;
+    flex: 1;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.metric-card label {
+    display: block;
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
 .dashboard-page,
 .analytics-page,
 .prediction-page,
@@ -355,8 +530,8 @@ body {
 }
 
 .activity-icon {
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -367,8 +542,8 @@ body {
 }
 
 .activity-icon i {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
 }
 
 .activity-content h5 {
@@ -376,6 +551,13 @@ body {
     font-weight: 600;
     color: var(--gray-900);
     margin-bottom: 0.125rem;
+}
+
+.activity-item h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 0.25rem;
 }
 
 .activity-content p {
@@ -561,6 +743,8 @@ body {
     font-size: 0.875rem;
 }
 
+
+
 .spinner {
     width: 16px;
     height: 16px;
@@ -568,6 +752,107 @@ body {
     border-top: 2px solid var(--primary-blue);
     border-radius: 50%;
     animation: spin 1s linear infinite;
+}
+
+
+/* Segment Card Styles - keep only one correct version for each */
+.loyal-card {
+    border-left: 4px solid #4caf50;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 2rem;
+    background: #fff;
+    margin-bottom: 2rem;
+}
+.at-risk-card {
+    border-left: 4px solid #f44336;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 2rem;
+    background: #fff;
+    margin-bottom: 2rem;
+}
+.neutral-card {
+    border-left: 4px solid #ff9800;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 2rem;
+    background: #fff;
+    margin-bottom: 2rem;
+}
+
+.segment-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.segment-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.segment-count {
+  font-size: 1.1rem;
+  color: #444;
+  font-weight: 500;
+}
+
+.segment-metrics-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: #f7f7fa;
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  text-align: center;
+  min-width: 25px;
+  flex: 1;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.metric-card label {
+  display: block;
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  display: block;
+}
+
+.metric-unit {
+  font-size: 1rem;
+  color: #888;
+  margin-top: -0.5rem;
+}
+
+.segment-characteristics h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+}
+
+.segment-characteristics ul {
+  padding-left: 1.2rem;
+}
+
+.segment-characteristics li {
+  margin-bottom: 0.5rem;
+  color: #222;
+  font-size: 1rem;
+  list-style: disc;
 }
 
 @keyframes spin {
