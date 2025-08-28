@@ -121,5 +121,11 @@ const cdrCustomerSchema = {
   ]
 };
 
-window.cdrCustomerData = generateCustomerCDRData();
-window.cdrCustomerSchema = cdrCustomerSchema;
+
+// Optionally export both data and schema
+const cdr = {
+  data: generateCustomerCDRData(),
+  schema: cdrCustomerSchema
+};
+
+export default cdr;

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Home, TrendingUp, BarChart3, Brain, Users, Target, Heart, AlertTriangle, MinusCircle, RefreshCw, Download } from "lucide-react";
 import "../../assets/css/main.css";
+import Card from "../components/Card";
 
 const Segments = () => {
   // State for segment stats (stubbed for now)
@@ -87,68 +88,103 @@ const Segments = () => {
           </div>
 
           <div className="segment-details">
-            {/* Loyal Customers Card */}
-            <div className="segment-card loyal">
-              <div className="segment-header">
-                <h3><Heart size={20} />Loyal Customers</h3>
-                <span className="segment-count">0 customers</span>
-              </div>
-              <div className="segment-metrics">
-                <div className="metric"><label>Avg Tenure</label><span>0 months</span></div>
-                <div className="metric"><label>Avg Revenue</label><span>$0</span></div>
-                <div className="metric"><label>Churn Rate</label><span>0%</span></div>
-              </div>
-              <div className="segment-characteristics">
-                <h4>Key Characteristics</h4>
-                <ul>
-                  <li>High tenure (24+ months)</li>
-                  <li>Premium service plans</li>
-                  <li>Low support ticket volume</li>
-                  <li>High satisfaction scores</li>
-                </ul>
-              </div>
-            </div>
-            {/* At-Risk Customers Card */}
-            <div className="segment-card at-risk">
-              <div className="segment-header">
-                <h3><AlertTriangle size={20} />At-Risk Customers</h3>
-                <span className="segment-count">0 customers</span>
-              </div>
-              <div className="segment-metrics">
-                <div className="metric"><label>Avg Tenure</label><span>0 months</span></div>
-                <div className="metric"><label>Avg Revenue</label><span>$0</span></div>
-                <div className="metric"><label>Churn Rate</label><span>0%</span></div>
-              </div>
-              <div className="segment-characteristics">
-                <h4>Risk Factors</h4>
-                <ul>
-                  <li>Short tenure (&lt; 12 months)</li>
-                  <li>Month-to-month contracts</li>
-                  <li>High support ticket volume</li>
-                  <li>Recent service issues</li>
-                </ul>
-              </div>
-            </div>
-            {/* Neutral Customers Card */}
-            <div className="segment-card neutral">
-              <div className="segment-header">
-                <h3><MinusCircle size={20} />Neutral Customers</h3>
-                <span className="segment-count">0 customers</span>
-              </div>
-              <div className="segment-metrics">
-                <div className="metric"><label>Avg Tenure</label><span>0 months</span></div>
-                <div className="metric"><label>Avg Revenue</label><span>$0</span></div>
-                <div className="metric"><label>Churn Rate</label><span>0%</span></div>
-              </div>
-              <div className="segment-characteristics">
-                <h4>Opportunities</h4>
-                <ul>
-                  <li>Moderate engagement levels</li>
-                  <li>Upsell potential for services</li>
-                  <li>Contract upgrade candidates</li>
-                  <li>Stable usage patterns</li>
-                </ul>
-              </div>
+            <div className="segment-cards-grid">
+              {/* Loyal Customers Card */}
+              <Card title={
+                <div className="segment-header-flex">
+                  <span className="segment-title"><Heart size={24} /> Loyal Customers</span>
+                  <span className="segment-count">0 customers</span>
+                </div>
+              } className="segment-card loyal-card">
+                <div className="segment-metrics-row">
+                  <div className="metric-card">
+                    <label>Avg Tenure</label>
+                    <span className="metric-value">0</span>
+                    <span className="metric-unit">months</span>
+                  </div>
+                  <div className="metric-card">
+                    <label>Avg Revenue</label>
+                    <span className="metric-value">$0</span>
+                  </div>
+                  <div className="metric-card">
+                    <label>Churn Rate</label>
+                    <span className="metric-value">0%</span>
+                  </div>
+                </div>
+                <div className="segment-characteristics">
+                  <h4>Key Characteristics</h4>
+                  <ul>
+                    <li>High tenure (24+ months)</li>
+                    <li>Premium service plans</li>
+                    <li>Low support ticket volume</li>
+                    <li>High satisfaction scores</li>
+                  </ul>
+                </div>
+              </Card>
+              {/* At-Risk Customers Card */}
+              <Card title={
+                <div className="segment-header-flex">
+                  <span className="segment-title"><AlertTriangle size={24} /> At-Risk Customers</span>
+                  <span className="segment-count">438 customers</span>
+                </div>
+              } className="segment-card at-risk-card">
+                <div className="segment-metrics-row">
+                  <div className="metric-card">
+                    <label>Avg Tenure</label>
+                    <span className="metric-value">30</span>
+                    <span className="metric-unit">months</span>
+                  </div>
+                  <div className="metric-card">
+                    <label>Avg Revenue</label>
+                    <span className="metric-value">$70</span>
+                  </div>
+                  <div className="metric-card">
+                    <label>Churn Rate</label>
+                    <span className="metric-value">61.2%</span>
+                  </div>
+                </div>
+                <div className="segment-characteristics">
+                  <h4>Risk Factors</h4>
+                  <ul>
+                    <li>Short tenure (&lt; 12 months)</li>
+                    <li>Month-to-month contracts</li>
+                    <li>High support ticket volume</li>
+                    <li>Recent service issues</li>
+                  </ul>
+                </div>
+              </Card>
+              {/* Neutral Customers Card */}
+              <Card title={
+                <div className="segment-header-flex">
+                  <span className="segment-title"><MinusCircle size={24} /> Neutral Customers</span>
+                  <span className="segment-count">0 customers</span>
+                </div>
+              } className="segment-card neutral-card">
+                <div className="segment-metrics-row">
+                  <div className="metric-card">
+                    <label>Avg Tenure</label>
+                    <span className="metric-value">0</span>
+                    <span className="metric-unit">months</span>
+                  </div>
+                  <div className="metric-card">
+                    <label>Avg Revenue</label>
+                    <span className="metric-value">$0</span>
+                  </div>
+                  <div className="metric-card">
+                    <label>Churn Rate</label>
+                    <span className="metric-value">0%</span>
+                  </div>
+                </div>
+                <div className="segment-characteristics">
+                  <h4>Opportunities</h4>
+                  <ul>
+                    <li>Moderate engagement levels</li>
+                    <li>Upsell potential for services</li>
+                    <li>Contract upgrade candidates</li>
+                    <li>Stable usage patterns</li>
+                  </ul>
+                </div>
+              </Card>
             </div>
           </div>
         </div>

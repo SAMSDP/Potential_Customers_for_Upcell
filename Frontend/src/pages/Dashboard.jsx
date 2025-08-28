@@ -1,9 +1,16 @@
-
 import React, { useEffect, useState } from "react";
-import { Home, TrendingUp, BarChart3, Brain, Users, Target, UserMinus, DollarSign, Calendar, AlertTriangle, Phone, Star } from "lucide-react";
+import { Home, TrendingUp, BarChart3, Brain, Users, Target, UserMinus, DollarSign, Calendar, AlertTriangle, Phone, Star, Contact2Icon, ContactIcon, Contact, LucideContact, FileWarningIcon, LucideMessageSquareWarning, RadioTower, ArrowBigRightDash, ArrowDownRightFromSquare, ArrowUpRightFromSquareIcon } from "lucide-react";
 import "../../assets/css/main.css";
 
+
+import Chart from "../components/Chart";
+import { getCdr } from "../api/cdrApi";
+import { getSupport } from "../api/supportApi";
+import { getTelco } from "../api/churnApi";
+import telco from "../database/telco.js";
+
 const Dashboard = () => {
+  const [churnChartData, setChurnChartData] = useState(null);
   const [stats, setStats] = useState({
     totalCustomers: 0,
     churnRate: 0,
@@ -12,31 +19,61 @@ const Dashboard = () => {
     highRiskCustomers: 0,
     upsellCandidates: 0,
     openTickets: 0,
-    avgSatisfaction: 0
+    avgSatisfaction: 0,
   });
+
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    // Simulate API call (replace with Axios call to /api when backend ready)
-    import("../api/churnApi").then(() => {
-      // Mocked data, replace with real API call
-      setStats({
-        totalCustomers: 1240,
-        churnRate: 27.1,
-        avgRevenue: 58.23,
-        avgTenure: 18,
-        highRiskCustomers: 42,
-        upsellCandidates: 87,
-        openTickets: 5,
-        avgSatisfaction: 4.2
-      });
-      setActivities([
-        { icon: <Users size={20} />, title: "New customer onboarded", description: "2 hours ago" },
-        { icon: <AlertTriangle size={20} />, title: "High churn risk detected", description: "4 hours ago" },
-        { icon: <TrendingUp size={20} />, title: "Upsell opportunity identified", description: "6 hours ago" },
-        { icon: <Phone size={20} />, title: "Support ticket resolved", description: "8 hours ago" },
-        { icon: <Star size={20} />, title: "5-star customer review", description: "1 day ago" }
-      ]);
+    // Fetch data from local API functions
+    const cdrData = getCdr();
+    const supportData = getSupport();
+    const telcoData = getTelco();
+
+    setStats({
+      totalCustomers: telcoData.totalCustomers,
+      churnRate: telcoData.churnRate,
+      avgRevenue: telcoData.avgRevenue,
+      avgTenure: telcoData.avgTenure,
+      highRiskCustomers: telcoData.highRiskCustomers,
+      upsellCandidates: cdrData.upsellCandidates,
+      openTickets: supportData.openTickets,
+      avgSatisfaction: supportData.avgSatisfaction,
+    });
+
+    setActivities([
+      { icon: <Users size={20} />, title: "New customer onboarded", description: "2 hours ago" },
+      { icon: <AlertTriangle size={20} />, title: "High churn risk detected", description: "4 hours ago" },
+      { icon: <TrendingUp size={20} />, title: "Upsell opportunity identified", description: "6 hours ago" },
+      { icon: <Phone size={20} />, title: "Support ticket resolved", description: "8 hours ago" },
+      { icon: <Star size={20} />, title: "5-star customer review", description: "1 day ago" }
+    ]);
+
+    // Aggregate churn count by month from telco.js
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const churnCounts = Array(12).fill(0);
+    telco.data.forEach((cust, i) => {
+      if (cust.churn === "Yes") {
+        // Randomly assign churn month for demo
+        const m = i % 12;
+        churnCounts[m]++;
+      }
+    });
+    setChurnChartData({
+      labels: months,
+      datasets: [
+        {
+          label: "Churned Customers",
+          data: churnCounts,
+          fill: true,
+          borderColor: "#3b82f6",
+          backgroundColor: "rgba(59,130,246,0.15)",
+          pointBackgroundColor: "#fff",
+          pointBorderColor: "#3b82f6",
+          pointRadius: 5,
+          tension: 0.4,
+        },
+      ],
     });
   }, []);
 
@@ -101,13 +138,48 @@ const Dashboard = () => {
           <div className="charts-row">
             <div className="chart-card">
               <h3>Churn Rate Trend</h3>
-              {/* Chart placeholder - replace with Chart component */}
-              <div style={{height: 220, background: '#f9fafb', borderRadius: 8}}></div>
+              <Chart
+                type="line"
+                data={(() => {
+                  // Calculate churn rate by month from telco.js
+                  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                  const churnCounts = Array(12).fill(0);
+                  const totalCounts = Array(12).fill(0);
+                  telco.data.forEach((cust, i) => {
+                    const m = i % 12;
+                    totalCounts[m]++;
+                    if (cust.churn === "Yes") churnCounts[m]++;
+                  });
+                  const churnRates = churnCounts.map((c, i) => totalCounts[i] ? (c / totalCounts[i]) * 100 : 0);
+                  return {
+                    labels: months,
+                    datasets: [
+                      {
+                        label: "Churn Rate %",
+                        data: churnRates,
+                        fill: false,
+                        borderColor: "#ef4444",
+                        tension: 0.4,
+                      },
+                    ],
+                  };
+                })()}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                  },
+                  scales: {
+                    y: { beginAtZero: true, max: 100 },
+                  },
+                }}
+                height={220}
+              />
             </div>
             <div className="chart-card">
               <h3>Customer Segments</h3>
-              {/* Chart placeholder - replace with Chart component */}
-              <div style={{height: 220, background: '#f9fafb', borderRadius: 8}}></div>
+              <div style={{ height: 220, background: '#f9fafb', borderRadius: 8 }}></div>
             </div>
           </div>
 
@@ -157,6 +229,41 @@ const Dashboard = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+              <div className="activity-item">
+                  <div className="stat-icon blue"><LucideContact /></div>
+                  <div>
+                    <h4>New customer onboarded</h4>
+                    <p>{stats.openTickets} hours ago</p>
+                  </div>
+              </div>
+              <div className="activity-item">
+                  <div className="stat-icon blue"><AlertTriangle /></div>
+                  <div>
+                    <h4>High churn risk detected</h4>
+                    <p>{stats.openTickets} hours ago</p>
+                  </div>
+              </div>
+              <div className="activity-item">
+                  <div className="stat-icon blue"><TrendingUp size={25}/></div>
+                  <div>
+                    <h4>Upsell opportunity identified</h4>
+                    <p>{stats.openTickets} hours ago</p>
+                  </div>
+              </div>
+              <div className="activity-item">
+                  <div className="stat-icon blue"><Phone /></div>
+                  <div>
+                    <h4>Support ticket resolved</h4>
+                    <p>{stats.openTickets} hours ago</p>
+                  </div>
+              </div>
+              <div className="activity-item">
+                  <div className="stat-icon blue"><Star /></div>
+                  <div>
+                    <h4>5-star customer review</h4>
+                    <p>{stats.openTickets} days ago</p>
+                  </div>
               </div>
             </div>
           </div>
