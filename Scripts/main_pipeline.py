@@ -1,11 +1,28 @@
 import pandas as pd
 import joblib
+import json
+import sys
+
+# --- Helper function for signals ---
+def signal(phase, status):
+    """
+    phase: str - Name of the pipeline phase
+    status: str - 'start' or 'done'
+    Emits a JSON signal to stdout (for frontend tracking).
+    """
+    msg = {"type": "signal", "phase": phase, "status": status}
+    print(json.dumps(msg))
+    sys.stdout.flush()
 
 # --- Load models ---
 churn_usage_model = joblib.load("Models/churn_usage_model.pkl")
 telco_churn_model = joblib.load("Models/churn_model.pkl")
 
-# --- Load Data ---
+# ===========================
+# 1. DATA VALIDATION
+# ===========================
+signal("Data Validation", "start")
+
 data = pd.read_excel("Data/processed/CDR-Sample-Input.xlsx")
 
 # Save identifiers (non-numeric columns) separately
@@ -15,14 +32,42 @@ identifiers = data[id_cols]
 # Drop them from the features used for prediction
 X = data.drop(columns=id_cols)
 
-# --- Run churn_usage_model ---
+signal("Data Validation", "done")
+
+# ===========================
+# 2. CDR MODEL INFERENCE
+# ===========================
+signal("CDR Model Inference", "start")
+
 churn_pred = churn_usage_model.predict(X)
 usage_category = churn_pred[:, 1]  # assuming 2nd column is usage_category
 
-# --- Run churn probability model ---
+signal("CDR Model Inference", "done")
+
+# ===========================
+# 3. SUPPORT MODEL INFERENCE
+# ===========================
+signal("Support Model Inference", "start")
+
+# If you have additional support models, run them here
+# Currently skipping (placeholder)
+
+signal("Support Model Inference", "done")
+
+# ===========================
+# 4. TELCO MODEL
+# ===========================
+signal("Telco Model", "start")
+
 churn_proba = telco_churn_model.predict_proba(X)[:, 1]  # probability of churn
 
-# --- Add results back to dataframe ---
+signal("Telco Model", "done")
+
+# ===========================
+# 5. DECISION LEVEL FUSION
+# ===========================
+signal("Decision Level Fusion", "start")
+
 results = data.copy()
 results["Churn_Prediction"] = churn_pred[:, 0]  # assuming 1st column is churn prediction
 results["Usage_Category"] = usage_category
@@ -42,15 +87,13 @@ def recommend_products(row):
 results["Recommended_Products"] = results.apply(recommend_products, axis=1)
 
 # --- Feature Importances (Top 10) ---
+top_features_list = []
 try:
-    # Check if model is a pipeline
     if hasattr(telco_churn_model, "named_steps"):
-        # Take the last step (assumes final estimator is the tree-based model)
         final_step = list(telco_churn_model.named_steps.values())[-1]
     else:
         final_step = telco_churn_model
 
-    # Get importances
     if hasattr(final_step, "feature_importances_"):  # tree-based models
         importances = final_step.feature_importances_
     elif hasattr(final_step, "coef_"):  # linear models
@@ -64,23 +107,30 @@ try:
             "Importance": importances
         }).sort_values(by="Importance", ascending=False).head(10)
 
-        # Format as "Feature (xx.xx%)"
-        feature_importances["Formatted"] = feature_importances.apply(
-            lambda row: f"{row['Feature']} ({row['Importance']*100:.2f}%)", axis=1
-        )
-
-        # Join as single string
-        top_features_str = ", ".join(feature_importances["Formatted"].tolist())
+        # Convert to list of dicts
+        top_features_list = [
+            {"feature": row["Feature"], "importance": round(row["Importance"] * 100, 2)}
+            for _, row in feature_importances.iterrows()
+        ]
     else:
-        top_features_str = "Model does not support feature importance"
-
+        top_features_list = []
 except Exception as e:
-    top_features_str = f"Error: {str(e)}"
+    top_features_list = [{"error": str(e)}]
 
-# --- Add Top 10 Features column (same for all rows) ---
-results["Top_10_Features"] = top_features_str
+# Add the same Top 10 features to every row (for consistency)
+results["Top_10_Features"] = [top_features_list] * len(results)
 
-# --- Save final output ---
-results.to_excel("final_output.xlsx", index=False)
+signal("Decision Level Fusion", "done")
 
-print("✅ Pipeline completed. Output saved to final_output.xlsx with Top 10 Features column")
+# ===========================
+# FINAL JSON RESPONSE
+# ===========================
+signal("Pipeline", "completed")
+
+response = {
+    "status": "success",
+    "message": "Pipeline completed successfully",
+    "results": results.to_dict(orient="records")
+}
+
+print(json.dumps(response, indent=2))
