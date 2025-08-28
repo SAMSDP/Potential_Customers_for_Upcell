@@ -152,5 +152,11 @@ const telcoSchema = {
 };
 
 // Export for use in frontend/backend
-window.telcoData = generateTelcoData();
-window.telcoSchema = telcoSchema;
+
+// Optionally export both data and schema
+const telco = {
+    data: generateTelcoData(),
+    schema: telcoSchema
+};
+
+export default telco;

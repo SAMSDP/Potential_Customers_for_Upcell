@@ -134,5 +134,11 @@ const supportSchema = {
   ]
 };
 
-window.supportData = generateSupportData();
-window.supportSchema = supportSchema;
+
+// Optionally export both data and schema
+const support = {
+  data: generateSupportData(),
+  schema: supportSchema
+};
+
+export default support;

@@ -1,3 +1,40 @@
+/* Customer Details Table: Churn Risk & Status badges */
+.badge-risk {
+    display: inline-block;
+    min-width: 70px;
+    padding: 0.35em 0.8em;
+    border-radius: 1em;
+    font-weight: 600;
+    font-size: 0.95em;
+    box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
+    text-align: center;
+    background: #fff;
+}
+.badge-risk.high {
+    color: #ef4444;
+    box-shadow: 0 2px 8px 0 rgba(239,68,68,0.18);
+    background: rgba(239,68,68,0.08);
+}
+.badge-risk.medium {
+    color: #fbbf24;
+    box-shadow: 0 2px 8px 0 rgba(251,191,36,0.18);
+    background: rgba(251,191,36,0.08);
+}
+.badge-risk.low {
+    color: #10b981;
+    box-shadow: 0 2px 8px 0 rgba(16,185,129,0.18);
+    background: rgba(16,185,129,0.08);
+}
+.badge-status.active {
+    color: #10b981;
+    box-shadow: 0 2px 8px 0 rgba(16,185,129,0.18);
+    background: rgba(16,185,129,0.08);
+}
+.badge-status.churned {
+    color: #ef4444;
+    box-shadow: 0 2px 8px 0 rgba(239,68,68,0.18);
+    background: rgba(239,68,68,0.08);
+}
 /* React Page Layout Fixes */
 .dashboard-page,
 .analytics-page,
@@ -222,6 +259,7 @@ body {
     padding: 2rem;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--gray-200);
+    margin-bottom: 2rem; /* Add vertical space between cards */
 }
 
 .chart-card h3 {
