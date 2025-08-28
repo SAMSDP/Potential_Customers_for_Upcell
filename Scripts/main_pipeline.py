@@ -3,10 +3,10 @@ import joblib
 
 # load models
 churn_usage_model = joblib.load("Models/churn_usage_model.pkl")
-telco_churn_model = joblib.load("Models/telco_churn_model.pkl")
+telco_churn_model = joblib.load("Models/churn_model.pkl")
 
 # --- Load Data ---
-data = pd.read_excel("CDR-Sample-Input.xlsx")
+data = pd.read_excel("Data/processed/CDR-Sample-Input.xlsx")
 
 # Save identifiers (non-numeric columns) separately
 id_cols = ["Phone Number"]  # <-- add more if needed
