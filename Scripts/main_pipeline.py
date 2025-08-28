@@ -1,7 +1,7 @@
 import pandas as pd
 import joblib
 
-# load models
+# --- Load models ---
 churn_usage_model = joblib.load("Models/churn_usage_model.pkl")
 telco_churn_model = joblib.load("Models/churn_model.pkl")
 
@@ -41,7 +41,46 @@ def recommend_products(row):
 
 results["Recommended_Products"] = results.apply(recommend_products, axis=1)
 
+# --- Feature Importances (Top 10) ---
+try:
+    # Check if model is a pipeline
+    if hasattr(telco_churn_model, "named_steps"):
+        # Take the last step (assumes final estimator is the tree-based model)
+        final_step = list(telco_churn_model.named_steps.values())[-1]
+    else:
+        final_step = telco_churn_model
+
+    # Get importances
+    if hasattr(final_step, "feature_importances_"):  # tree-based models
+        importances = final_step.feature_importances_
+    elif hasattr(final_step, "coef_"):  # linear models
+        importances = abs(final_step.coef_[0])
+    else:
+        importances = None
+
+    if importances is not None:
+        feature_importances = pd.DataFrame({
+            "Feature": X.columns,
+            "Importance": importances
+        }).sort_values(by="Importance", ascending=False).head(10)
+
+        # Format as "Feature (xx.xx%)"
+        feature_importances["Formatted"] = feature_importances.apply(
+            lambda row: f"{row['Feature']} ({row['Importance']*100:.2f}%)", axis=1
+        )
+
+        # Join as single string
+        top_features_str = ", ".join(feature_importances["Formatted"].tolist())
+    else:
+        top_features_str = "Model does not support feature importance"
+
+except Exception as e:
+    top_features_str = f"Error: {str(e)}"
+
+# --- Add Top 10 Features column (same for all rows) ---
+results["Top_10_Features"] = top_features_str
+
 # --- Save final output ---
 results.to_excel("final_output.xlsx", index=False)
 
-print("✅ Pipeline completed. Output saved to final_output.xlsx")
+print("✅ Pipeline completed. Output saved to final_output.xlsx with Top 10 Features column")
