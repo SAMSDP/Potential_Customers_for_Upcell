@@ -23,7 +23,7 @@ telco_churn_model = joblib.load("Models/churn_model.pkl")
 # ===========================
 signal("Data Validation", "start")
 
-data = pd.read_excel("Data/processed/CDR-Sample-Input.xlsx")
+data = pd.read_excel("D:\cts datasets\CDR-Sample-Input.xlsx")
 
 # Save identifiers (non-numeric columns) separately
 id_cols = ["Phone Number"]  # <-- add more if needed
@@ -31,6 +31,10 @@ identifiers = data[id_cols]
 
 # Drop them from the features used for prediction
 X = data.drop(columns=id_cols)
+
+# Store tenure column temporarily before removing it
+tenure_data = X["tenure"]  # Store tenure data temporarily
+X = X.drop(columns=["tenure"])  # Remove tenure column for model inference
 
 signal("Data Validation", "done")
 
@@ -72,6 +76,9 @@ results = data.copy()
 results["Churn_Prediction"] = churn_pred[:, 0]  # assuming 1st column is churn prediction
 results["Usage_Category"] = usage_category
 results["Churn_Probability"] = churn_proba
+
+# Add the tenure column back to results
+# Add the temporary tenure data back
 
 # --- Recommended Products based on function ---
 def recommend_products(row):
@@ -119,6 +126,12 @@ except Exception as e:
 
 # Add the same Top 10 features to every row (for consistency)
 results["Top_10_Features"] = [top_features_list] * len(results)
+
+# Add tenure column to the end by dropping it first if exists, then adding it
+if 'tenure' in results.columns:
+    results = results.drop(columns=['tenure'])
+results["tenure"] = tenure_data.values
+print("tenure data values:", tenure_data.values)
 
 signal("Decision Level Fusion", "done")
 
