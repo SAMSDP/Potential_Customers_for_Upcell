@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Home, TrendingUp, BarChart3, Brain, Users, Target, UserMinus, DollarSign, Calendar, AlertTriangle, Phone, Star, Contact2Icon, ContactIcon, Contact, LucideContact, FileWarningIcon, LucideMessageSquareWarning, RadioTower, ArrowBigRightDash, ArrowDownRightFromSquare, ArrowUpRightFromSquareIcon } from "lucide-react";
+import { Home, TrendingUp, BarChart3, Brain, Users, Target, UserMinus, DollarSign, Calendar, AlertTriangle, Phone, Star, Contact2Icon, ContactIcon, Contact, LucideContact, FileWarningIcon, LucideMessageSquareWarning, RadioTower, ArrowBigRightDash, ArrowDownRightFromSquare, ArrowUpRightFromSquareIcon, IndianRupee } from "lucide-react";
 import "../../assets/css/main.css";
 
 
@@ -118,9 +118,9 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon green"><DollarSign /></div>
+              <div className="stat-icon green"><IndianRupee/></div>
               <div className="stat-content">
-                <h3>${stats.avgRevenue}</h3>
+                <h3>₹{stats.avgRevenue.toLocaleString("en-IN")}</h3>
                 <p>Avg Monthly Revenue</p>
                 <span className="trend positive">+8.1% vs last month</span>
               </div>
@@ -229,41 +229,6 @@ const Dashboard = () => {
                     </div>
                   </div>
                 ))}
-              </div>
-              <div className="activity-item">
-                  <div className="stat-icon blue"><LucideContact /></div>
-                  <div>
-                    <h4>New customer onboarded</h4>
-                    <p>{stats.openTickets} hours ago</p>
-                  </div>
-              </div>
-              <div className="activity-item">
-                  <div className="stat-icon blue"><AlertTriangle /></div>
-                  <div>
-                    <h4>High churn risk detected</h4>
-                    <p>{stats.openTickets} hours ago</p>
-                  </div>
-              </div>
-              <div className="activity-item">
-                  <div className="stat-icon blue"><TrendingUp size={25}/></div>
-                  <div>
-                    <h4>Upsell opportunity identified</h4>
-                    <p>{stats.openTickets} hours ago</p>
-                  </div>
-              </div>
-              <div className="activity-item">
-                  <div className="stat-icon blue"><Phone /></div>
-                  <div>
-                    <h4>Support ticket resolved</h4>
-                    <p>{stats.openTickets} hours ago</p>
-                  </div>
-              </div>
-              <div className="activity-item">
-                  <div className="stat-icon blue"><Star /></div>
-                  <div>
-                    <h4>5-star customer review</h4>
-                    <p>{stats.openTickets} days ago</p>
-                  </div>
               </div>
             </div>
           </div>
