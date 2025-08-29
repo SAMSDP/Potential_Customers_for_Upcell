@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Home, TrendingUp, BarChart3, Brain, Users, Target, UserMinus, DollarSign, Calendar, AlertTriangle, Phone, Star, Contact2Icon, ContactIcon, Contact, LucideContact, FileWarningIcon, LucideMessageSquareWarning, RadioTower, ArrowBigRightDash, ArrowDownRightFromSquare, ArrowUpRightFromSquareIcon } from "lucide-react";
+import { Home, TrendingUp, BarChart3, Brain, Users, Target, UserMinus, DollarSign, Calendar, AlertTriangle, Phone, Star, Contact2Icon, ContactIcon, Contact, LucideContact, FileWarningIcon, LucideMessageSquareWarning, RadioTower, ArrowBigRightDash, ArrowDownRightFromSquare, ArrowUpRightFromSquareIcon, IndianRupee } from "lucide-react";
 import "../../assets/css/main.css";
 
 
@@ -118,9 +118,9 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon green"><DollarSign /></div>
+              <div className="stat-icon green"><IndianRupee/></div>
               <div className="stat-content">
-                <h3>${stats.avgRevenue}</h3>
+                <h3>₹{stats.avgRevenue.toLocaleString("en-IN")}</h3>
                 <p>Avg Monthly Revenue</p>
                 <span className="trend positive">+8.1% vs last month</span>
               </div>
