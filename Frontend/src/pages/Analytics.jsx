@@ -23,8 +23,48 @@ const Analytics = () => {
   const [supportMetricsData, setSupportMetricsData] = useState(null);
   const [revenueDistributionData, setRevenueDistributionData] = useState(null);
 
-  // Handler stubs
-  const applyFilters = () => {};
+  // Filter handler
+  const applyFilters = () => {
+    let filtered = telco.data;
+    // Tenure filter
+    if (tenure === "new") {
+      filtered = filtered.filter(cust => cust.tenure <= 12);
+    } else if (tenure === "old") {
+      filtered = filtered.filter(cust => cust.tenure > 24);
+    }
+    // Service Type filter
+    if (service === "fiber") {
+      filtered = filtered.filter(cust => cust.internet_service === "Fiber Optic");
+    } else if (service === "dsl") {
+      filtered = filtered.filter(cust => cust.internet_service === "DSL");
+    } else if (service === "no") {
+      filtered = filtered.filter(cust => cust.internet_service === "No Internet");
+    }
+    // Contract Type filter
+    if (contract === "month") {
+      filtered = filtered.filter(cust => cust.contract === "Month-to-month");
+    } else if (contract === "year") {
+      filtered = filtered.filter(cust => cust.contract === "One year" || cust.contract === "Two year");
+    }
+    // Map to table format
+    const customerRows = filtered.slice(0, 100).map(cust => {
+      let churn_risk = "Low";
+      if (cust.churn === "Yes") {
+        churn_risk = "High";
+      } else if (cust.tenure <= 12) {
+        churn_risk = "Medium";
+      }
+      return {
+        customer_id: cust.customer_id,
+        tenure: cust.tenure,
+        contract: cust.contract,
+        monthly_charges: cust.monthly_charges,
+        churn_risk,
+        status: cust.churn === "Yes" ? "Churned" : "Active",
+      };
+    });
+    setCustomers(customerRows);
+  };
   const exportCustomerData = () => {};
 
   useEffect(() => {
@@ -153,41 +193,6 @@ const Analytics = () => {
           <p>Deep dive into customer behavior patterns and trends</p>
         </header>
 
-        <div className="filters-section" style={{background: 'white', padding: '1.5rem', borderRadius: 16, marginBottom: '2rem', boxShadow: 'var(--shadow-md)'}}>
-          <h3 style={{marginBottom: '1rem'}}>Filters</h3>
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem'}}>
-            <div className="form-group">
-              <label className="form-label">Tenure</label>
-              <select className="form-select" value={tenure} onChange={e => setTenure(e.target.value)}>
-                <option value="">All Customers</option>
-                <option value="new">New (≤ 12 months)</option>
-                <option value="old">Experienced ({'>'} 24 months)</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label className="form-label">Contract Type</label>
-              <select className="form-select" value={contract} onChange={e => setContract(e.target.value)}>
-                <option value="">All Contracts</option>
-                <option value="month">Monthly</option>
-                <option value="year">Yearly</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label className="form-label">Service Type</label>
-              <select className="form-select" value={service} onChange={e => setService(e.target.value)}>
-                <option value="">All Services</option>
-                <option value="fiber">Fiber Optic</option>
-                <option value="dsl">DSL</option>
-                <option value="no">No Internet</option>
-              </select>
-            </div>
-            <div className="form-group" style={{display: 'flex', alignItems: 'end'}}>
-              <button className="btn btn-primary" onClick={applyFilters}>
-                <Filter size={16} style={{marginRight: 4}} />Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
 
         <div className="analytics-grid">
           <div className="charts-row">
@@ -261,6 +266,41 @@ const Analytics = () => {
               ) : (
                 <div>Loading...</div>
               )}
+            </div>
+          </div>
+          <div className="filters-section" style={{background: 'white', padding: '1.5rem', borderRadius: 16, marginBottom: '2rem', boxShadow: 'var(--shadow-md)'}}>
+            <h3 style={{marginBottom: '1rem'}}>Filters</h3>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem'}}>
+              <div className="form-group">
+                <label className="form-label">Tenure</label>
+                <select className="form-select" value={tenure} onChange={e => setTenure(e.target.value)}>
+                  <option value="">All Customers</option>
+                  <option value="new">New (≤ 12 months)</option>
+                  <option value="old">Experienced ({'>'} 24 months)</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Contract Type</label>
+                <select className="form-select" value={contract} onChange={e => setContract(e.target.value)}>
+                  <option value="">All Contracts</option>
+                  <option value="month">Monthly</option>
+                  <option value="year">Yearly</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Service Type</label>
+                <select className="form-select" value={service} onChange={e => setService(e.target.value)}>
+                  <option value="">All Services</option>
+                  <option value="fiber">Fiber Optic</option>
+                  <option value="dsl">DSL</option>
+                  <option value="no">No Internet</option>
+                </select>
+              </div>
+              <div className="form-group" style={{display: 'flex', alignItems: 'end'}}>
+                <button className="btn btn-primary" onClick={applyFilters}>
+                  <Filter size={16} style={{marginRight: 4}} />Apply Filters
+                </button>
+              </div>
             </div>
           </div>
           <div className="table-section">
