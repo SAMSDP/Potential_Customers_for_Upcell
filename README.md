@@ -73,7 +73,9 @@ A comprehensive **customer intelligence platform** that leverages **machine lear
 | **openpyxl / xlrd**| Read Excel files | `main_pipeline.py` |
 | **psycopg2-binary**| PostgreSQL adapter | DB connection |
 
-📌 Example `requirements.txt`:  
+---
+
+### 📌 Example `requirements.txt`:  
 ```txt
 Django==4.2.7
 djangorestframework==3.14.0
@@ -85,52 +87,59 @@ joblib==1.3.2
 openpyxl==3.1.2
 psycopg2-binary==2.9.9
 
-🌐 External Resource Dependencies
-Resource	Type	Required By	Purpose
-churn_model.pkl, churn_usage_model.pkl	File	main_pipeline.py	ML predictions
-cdr.js, telco.js, support.js	Mock data files	Analytics.jsx, Dashboard.jsx	API simulation before backend
-cdrApi.js, churnApi.js, supportApi.js, sampleApi.js	API service files	Frontend pages	⚠️ Missing implementation (critical)
-PostgreSQL Database	Service	models.py, views.py	Persistent storage
-🛠 Development & Build Tool Dependencies
-Tool	Purpose
-Node.js (v16+)	Run frontend
-Python (v3.8+)	Run backend
-pip	Python package installer
-npm / yarn	Node package manager
-Git	Version control
-PostgreSQL	Production DB (SQLite for dev)
-🛠️ Technology Stack
-🎨 Frontend
+---
 
+## 🌐 External Resource Dependencies
+| Resource               | Type | Required By             | Purpose                                 |
+| ---------------------- | ---- | ----------------------- | --------------------------------------- |
+| `churn_model.pkl`      | File | `main_pipeline.py`      | ML predictions                          |
+| `churn_usage_model...` | File | `Analytics.jsx`         | Dashboard simulation before backend     |
+| `telco.csv`            | Data | `supportApi.js`         | Mock data files                         |
+| `sampleApi.js`         | File | `api.js`                | API service (Frontend pages) ⚠️ Missing |
+| PostgreSQL Database    | DB   | `models.py`, `views.py` | Persistent storage                      |
+
+---
+
+## 🛠 Development & Build Tool Dependencies
+| Tool           | Purpose                        |
+| -------------- | ------------------------------ |
+| Node.js (v16+) | Run frontend                   |
+| Python (v3.8+) | Run backend                    |
+| pip            | Python package installer       |
+| npm / yarn     | Node package manager           |
+| Git            | Version control                |
+| PostgreSQL     | Production DB (SQLite for dev) |
+
+
+---
+
+## 🛠️ Technology Stack
+
+### 🎨 Frontend
 Framework: React 18 + Vite ⚡
-
 Styling: Tailwind CSS
-
 Charts: Chart.js + react-chartjs-2
-
 Icons: Lucide React
-
 API Calls: Axios
 
-⚙️ Backend
+---
 
+### ⚙️ Backend
 Framework: Django 4.2+
-
 API: Django REST Framework
-
 Database: PostgreSQL / SQLite
-
 ML Libraries: Scikit-learn, XGBoost, LightGBM
-
 Data Processing: Pandas, NumPy
 
-🤖 Machine Learning
+---
 
+## 🤖 Machine Learning
 Model Persistence: Joblib
-
 Feature Engineering & Predictions: main_pipeline.py
 
-🏗️ Architecture Diagram
+---
+
+## 🏗️ Architecture Diagram
 ┌─────────────────┐    HTTP/JSON    ┌─────────────────┐    SQL    ┌─────────────────┐
 │   React Frontend │ ◄─────────────► │   Django API     │ ◄───────► │   Database       │
 │                 │                 │   Server        │          │   (PostgreSQL)  │
@@ -149,7 +158,9 @@ Feature Engineering & Predictions: main_pipeline.py
 │ - Model Files    │
 └─────────────────┘
 
-📁 File Structure
+---
+
+## 📁 File Structure
 Potential_Customers_for_Upcell/
 ├── Frontend/
 │   ├── src/
@@ -168,69 +179,62 @@ Potential_Customers_for_Upcell/
 │   └── main_pipeline.py    # ML pipeline
 └── README.md
 
-📄 File Explanations
-🎨 Frontend Components
+---
 
+## 📄 File Explanations
+
+### 🎨 Frontend Components
 Card.jsx → Reusable card UI
-
 Chart.jsx → Configurable charts
-
 Scatter.jsx → Scatter plots for segmentation
-
 Table.jsx → Dynamic data tables
-
 Form.jsx → File upload forms
 
-📊 Pages
+---
 
+### 📊 Pages
 Dashboard.jsx → KPIs & churn trends
-
 Analytics.jsx → Filters, usage charts, customer tables
-
 Prediction.jsx → ML predictions with CSV uploads
-
 Segments.jsx → Customer clustering visualizations
-
 Recommendations.jsx → AI-generated recommendations
 
-⚙️ Backend Files
+---
 
+### ⚙️ Backend Files
 models.py → Defines DB schema (CDR, Telco, Support)
-
 views.py → API endpoints
-
 urls.py → Routing
-
 serializers.py → Data serialization
 
-🤖 ML Pipeline
+---
 
+### 🤖 ML Pipeline
 main_pipeline.py → Data processing, feature engineering, prediction
 
-🔄 Data Flow
+---
 
+### 🔄 Data Flow
 Data Ingestion → CSV upload / API request
-
 Processing → ML pipeline (validation, prediction)
-
 Analysis → Results stored temporarily
-
 Output → Frontend charts, recommendations, exports
 
-📊 Input/Output Formats
-Input
+---
 
+## 📊 Input/Output Formats
+
+### Input
 CSV Upload → phone_number, account_length, day_mins, etc.
-
 API → /api/cdr/, /api/telco/, /api/support/
 
-Output
-
+### Output
 JSON API Responses → customer metrics & churn rate
-
 Prediction Results → churn probability, recommended products
 
-⚙️ Environment Configuration
+---
+
+## ⚙️ Environment Configuration
 
 Create a .env file in Backend/
 
@@ -246,8 +250,11 @@ USAGE_MODEL_PATH=Models/churn_usage_model.pkl
 # API Settings
 CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 
-📦 Installation & Setup
-🖥 Backend Setup
+---
+
+## 📦 Installation & Setup
+
+### 🖥 Backend Setup
 git clone <repository-url>
 cd Potential_Customers_for_Upcell/Backend
 
@@ -259,55 +266,48 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 
-🎨 Frontend Setup
+### 🎨 Frontend Setup
 cd ../Frontend
 npm install
 npm run dev
 
-🤖 ML Models Setup
+---
 
+## 🤖 ML Models Setup
 Place model files in Models/
-
 churn_model.pkl
-
 churn_usage_model.pkl
 
-🚀 Usage Guide
+---
 
+## 🚀 Usage Guide
 Dashboard → Monitor churn rate & KPIs
-
 Predictions → Upload CSV for churn analysis
-
 Segments → Visualize customer clusters
-
 Recommendations → Get AI-driven suggestions
-
 Export → CSV/PDF reports
 
-🤝 Contributing
+---
 
+## 🤝 Contributing
 We ❤️ contributions!
-
 Fork the repo
-
 Create a branch → git checkout -b feature/amazing-feature
-
 Commit changes → git commit -m 'Add amazing feature'
-
 Push branch → git push origin feature/amazing-feature
-
 Open a Pull Request 🚀
 
-Guidelines
+---
 
+### Guidelines
 Follow PEP8 (Python)
-
 Use ESLint (JavaScript)
-
 Write tests 🧪
-
 Update docs 📖
 
-📄 License
+---
 
+## 📄 License
 Licensed under the MIT License – see the LICENSE file.
+
+---
