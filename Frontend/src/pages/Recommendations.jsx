@@ -1,0 +1,240 @@
+import React, { useState } from "react";
+import { Home, TrendingUp, BarChart3, Brain, Users, Target, Crown, Shield, Download, RefreshCw, FileText, Send, TrendingUp as TrendingUpIcon, Calendar } from "lucide-react";
+import "../../assets/css/main.css";
+import { getRecommendations, getRecommendationSummary } from "../api/sampleApi";
+
+
+
+
+const Recommendations = () => {
+  // State for recommendations and filters
+  const [recommendations, setRecommendations] = useState([]);
+  const [summary, setSummary] = useState({ loyal: 0, atRisk: 0, neutral: 0, conversionRate: '0%', retentionRate: '0%', engagementRate: '0%' });
+  const [segment, setSegment] = useState("");
+  const [priority, setPriority] = useState("");
+  const [type, setType] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  React.useEffect(() => {
+    // Fetch summary for cards
+    const s = getRecommendationSummary();
+    setSummary(s);
+    // Fetch all recommendations for pagination
+    const recs = getRecommendations({ segment, priority, type });
+    setRecommendations(recs);
+  }, [segment, priority, type]);
+
+  // Reset to first page only when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [segment, priority, type]);
+
+  // Handler stubs
+  const applyFilters = () => {};
+  const generateRecommendations = () => {};
+  const exportRecommendations = format => {};
+  const sendToSalesTeam = () => {};
+
+  return (
+    <div className="recommendations-page">
+      <nav className="sidebar">
+        <div className="logo">
+          <TrendingUp size={24} />
+          <span>CustomerIQ</span>
+        </div>
+        <ul className="nav-menu">
+          <li><a href="/" className="nav-link" data-page="dashboard"><Home size={18} />Dashboard</a></li>
+          <li><a href="/analytics" className="nav-link" data-page="analytics"><BarChart3 size={18} />Analytics</a></li>
+          <li><a href="/prediction" className="nav-link" data-page="prediction"><Brain size={18} />Predictions</a></li>
+          <li><a href="/segments" className="nav-link" data-page="segments"><Users size={18} />Segments</a></li>
+          <li><a href="/recommendations" className="nav-link active" data-page="recommendations"><Target size={18} />Recommendations</a></li>
+        </ul>
+      </nav>
+
+      <main className="main-content">
+        <header className="page-header">
+          <h1>Smart Recommendations</h1>
+          <p>AI-powered personalized suggestions for customer engagement</p>
+        </header>
+
+        <div className="recommendations-dashboard">
+          <div className="strategy-overview">
+            <div className="strategy-card loyal">
+              <div className="strategy-header"><Crown size={24} /><h3>Loyal Customers</h3></div>
+              <div className="strategy-content">
+                <p>Premium upsell opportunities and exclusive offers</p>
+                <div className="strategy-stats">
+                  <div className="stat"><span className="stat-value">{summary.loyal}</span><span className="stat-label">Recommendations</span></div>
+                  <div className="stat"><span className="stat-value">{summary.conversionRate}</span><span className="stat-label">Conversion Rate</span></div>
+                </div>
+              </div>
+            </div>
+            <div className="strategy-card at-risk">
+              <div className="strategy-header"><Shield size={24} /><h3>At-Risk Customers</h3></div>
+              <div className="strategy-content">
+                <p>Retention offers and service improvement plans</p>
+                <div className="strategy-stats">
+                  <div className="stat"><span className="stat-value">{summary.atRisk}</span><span className="stat-label">Recommendations</span></div>
+                  <div className="stat"><span className="stat-value">{summary.retentionRate}</span><span className="stat-label">Retention Rate</span></div>
+                </div>
+              </div>
+            </div>
+            <div className="strategy-card neutral">
+              <div className="strategy-header"><TrendingUpIcon size={24} /><h3>Neutral Customers</h3></div>
+              <div className="strategy-content">
+                <p>Engagement campaigns and service discovery</p>
+                <div className="strategy-stats">
+                  <div className="stat"><span className="stat-value">{summary.neutral}</span><span className="stat-label">Recommendations</span></div>
+                  <div className="stat"><span className="stat-value">{summary.engagementRate}</span><span className="stat-label">Engagement Rate</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="filters-section" style={{background: 'white', padding: '1.5rem', borderRadius: 16, margin: '2rem 0', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
+              <h3>Filter Recommendations</h3>
+              <button className="btn btn-primary" onClick={generateRecommendations}><RefreshCw size={16} style={{marginRight: 4}} />Refresh Recommendations</button>
+            </div>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem'}}>
+              <div className="form-group">
+                <label className="form-label">Segment</label>
+                <select className="form-select" value={segment} onChange={e => setSegment(e.target.value)}>
+                  <option value="">All Segments</option>
+                  <option value="loyal">Loyal</option>
+                  <option value="at-risk">At Risk</option>
+                  <option value="neutral">Neutral</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Priority</label>
+                <select className="form-select" value={priority} onChange={e => setPriority(e.target.value)}>
+                  <option value="">All Priorities</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Recommendation Type</label>
+                <select className="form-select" value={type} onChange={e => setType(e.target.value)}>
+                  <option value="">All Types</option>
+                  <option value="upsell">Upsell</option>
+                  <option value="retention">Retention</option>
+                  <option value="engagement">Engagement</option>
+                </select>
+              </div>
+              <div className="form-group" style={{display: 'flex', alignItems: 'end'}}>
+                <button className="btn btn-secondary" onClick={applyFilters}><Target size={16} style={{marginRight: 4}} />Apply Filters</button>
+              </div>
+            </div>
+          </div>
+
+          <div className="recommendations-grid" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '2rem',
+            margin: '2rem 0'
+          }}>
+            {(() => {
+              const startIdx = (currentPage - 1) * pageSize;
+              const endIdx = startIdx + pageSize;
+              const paginatedRecommendations = recommendations.slice(startIdx, endIdx);
+              if (paginatedRecommendations.length === 0) {
+                return <div style={{gridColumn: '1 / -1', textAlign: 'center', color: '#888'}}>No recommendations</div>;
+              }
+              return paginatedRecommendations.map((rec, idx) => (
+                <div key={`${rec.customer_id}_${startIdx + idx}`} style={{
+                  background: '#fff',
+                  borderRadius: 16,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+                  padding: '2rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minHeight: 220,
+                  position: 'relative'
+                }}>
+                  <div style={{display: 'flex', alignItems: 'center', marginBottom: 8}}>
+                    <div style={{background: '#2563eb', color: '#fff', borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 18, marginRight: 12}}>
+                      {startIdx + idx + 1}
+                    </div>
+                    <div>
+                      <div style={{fontWeight: 600, fontSize: 18}}>Customer {rec.customer_id ? rec.customer_id.replace(/\D/g, '') : startIdx + idx + 1}</div>
+                      <div style={{fontSize: 14, color: '#888'}}>{rec.customer_id || '-'}</div>
+                    </div>
+                    <div style={{marginLeft: 'auto'}}>
+                      {(() => {
+                        let color = '#fff1b9ff', text = 'rgba(255, 192, 3, 1)', label = 'Medium';
+                        if (rec.priority === 'high') { color = '#fee2e2'; text = '#dc2626'; label = 'High'; }
+                        else if (rec.priority === 'low') { color = '#d1fae5'; text = '#059669'; label = 'Low'; }
+                        return (
+                          <span style={{background: color, color: text, borderRadius: 8, padding: '2px 12px', fontSize: 14, fontWeight: 500, boxShadow: `0 0 0 2px ${color}`}}>{label}</span>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                  <div style={{margin: '8px 0'}}>
+                    <span style={{background: '#f3f4f6', color: '#374151', borderRadius: 6, padding: '2px 10px', fontSize: 13, fontWeight: 500}}>
+                      {rec.type === 'retention' ? 'Retention Opportunity' : rec.type === 'engagement' ? 'Engagement Opportunity' : 'Upsell Opportunity'}
+                    </span>
+                  </div>
+                  <div style={{marginBottom: 16, color: '#444', fontSize: 15}}>
+                    {/* Example description, you can customize this logic */}
+                    {rec.type === 'retention' && 'Immediate retention offer with 20% discount and dedicated support. Address service concerns proactively.'}
+                    {rec.type === 'engagement' && 'Introduce mid-tier service upgrades and personalized usage insights to increase engagement.'}
+                    {rec.type === 'upsell' && 'Offer premium plan upgrades and exclusive features to loyal customers.'}
+                  </div>
+                  <div style={{display: 'flex', gap: '2rem'}}>
+                    <div style={{background: '#f9fafb', borderRadius: 12, padding: '1rem', flex: 1, textAlign: 'center'}}>
+                      <div style={{fontWeight: 700, fontSize: 22}}>
+                        {rec.churn_probability !== undefined ? `${Math.round((1 - rec.churn_probability) * 100)}%` : '—'}
+                      </div>
+                      <div style={{fontSize: 13, color: '#888'}}>Acceptance Score</div>
+                    </div>
+                    <div style={{background: '#f9fafb', borderRadius: 12, padding: '1rem', flex: 1, textAlign: 'center'}}>
+                      <div style={{fontWeight: 700, fontSize: 22}}>
+                        {rec.day_charge !== undefined && rec.eve_charge !== undefined && rec.night_charge !== undefined
+                          ? `₹${Math.round((Number(rec.day_charge) + Number(rec.eve_charge) + Number(rec.night_charge)) * 83).toLocaleString('en-IN')}`
+                          : '₹—'}
+                      </div>
+                      <div style={{fontSize: 13, color: '#888'}}>Potential Revenue</div>
+                    </div>
+                  </div>
+                </div>
+              ));
+            })()}
+
+          {/* Close recommendations-grid */}
+          </div>
+
+          {/* Pagination Controls */}
+          {recommendations.length > pageSize && (
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, margin: '2rem 0'}}>
+              <button className="btn btn-secondary" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>Previous</button>
+              <span style={{fontWeight: 500, fontSize: 16}}>Page {currentPage} of {Math.ceil(recommendations.length / pageSize)}</span>
+              <button className="btn btn-secondary" onClick={() => setCurrentPage(p => Math.min(Math.ceil(recommendations.length / pageSize), p + 1))} disabled={currentPage === Math.ceil(recommendations.length / pageSize)}>Next</button>
+            </div>
+          )}
+
+          <div className="export-section">
+            <div className="chart-card">
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <div>
+                  <h3>Export Recommendations</h3>
+                  <p style={{color: 'var(--gray-600)', margin: 0}}>Download personalized recommendations for your team</p>
+                </div>
+                <div style={{display: 'flex', gap: '1rem'}}>
+                  <button className="btn btn-secondary" onClick={() => exportRecommendations('csv')}><FileText size={16} style={{marginRight: 4}} />Export CSV</button>
+                  <button className="btn btn-secondary" onClick={() => exportRecommendations('pdf')}><FileText size={16} style={{marginRight: 4}} />Export PDF Report</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Recommendations;
