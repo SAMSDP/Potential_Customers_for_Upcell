@@ -1,5 +1,3 @@
-
-
 import React, { useRef } from "react";
 import { Line, Bar, Doughnut } from "react-chartjs-2";
 import {
@@ -26,7 +24,6 @@ ChartJS.register(
   Legend,
   ArcElement,
 );
-
 
 const Chart = ({ data, options, height = 220, type = "line" }) => {
   const chartRef = useRef();
@@ -83,6 +80,7 @@ const Chart = ({ data, options, height = 220, type = "line" }) => {
 
   // Dynamically set the backgroundColor as a gradient
   const chartData = React.useMemo(() => {
+    if (!data || !data.labels) return {}; // Avoid rendering chart with invalid data
     if (!chartRef.current) return data;
     const chart = chartRef.current;
     const ctx = chart.ctx;
@@ -105,6 +103,8 @@ const Chart = ({ data, options, height = 220, type = "line" }) => {
       })),
     };
   }, [data]);
+
+  if (!data || !data.labels) return <div>Loading...</div>; // Display loading until data is available
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
