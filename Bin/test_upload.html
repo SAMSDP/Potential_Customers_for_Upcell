@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Test</title>
+</head>
+<body>
+  <h2>Upload File Test</h2>
+  <input type="file" id="fileInput" />
+  <button onclick="uploadFile()">Upload</button>
+
+  <p id="jobInfo"></p>
+
+  <script>
+    async function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      if (!file) return alert("Select a file first!");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("http://127.0.0.1:8000/prediction/upload/", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      document.getElementById('jobInfo').innerText = 
+        data.error ? data.error : `Job ID: ${data.job_id}, File: ${data.filename}`;
+    }
+  </script>
+</body>
+</html>
