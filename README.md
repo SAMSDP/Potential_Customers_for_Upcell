@@ -174,7 +174,7 @@ Potential_Customers_for_Upcell/
 │   ├── backend/            # Django settings & core  
 │   ├── api/                # API app (models, views, serializers)  
 │   └── requirements.txt  
-├── Models/                 # Trained ML models  
+├── Models/                 # Trained ML models 
 ├── Scripts/  
 │   └── main_pipeline.py    # ML pipeline  
 └── README.md
