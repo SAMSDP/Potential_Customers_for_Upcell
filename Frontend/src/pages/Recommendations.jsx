@@ -275,7 +275,6 @@ const Recommendations = () => {
                 <div style={{display: 'flex', gap: '1rem'}}>
                   <button className="btn btn-secondary" onClick={() => exportRecommendations('csv')}><FileText size={16} style={{marginRight: 4}} />Export CSV</button>
                   <button className="btn btn-secondary" onClick={() => exportRecommendations('pdf')}><FileText size={16} style={{marginRight: 4}} />Export PDF Report</button>
-                  <button className="btn btn-success" onClick={sendToSalesTeam}><Send size={16} style={{marginRight: 4}} />Send to Sales Team</button>
                 </div>
               </div>
             </div>
