@@ -17,8 +17,7 @@ A comprehensive **customer intelligence platform** that leverages **machine lear
 - [📦 Installation & Setup](#-installation--setup)  
 - [🚀 Usage Guide](#-usage-guide)  
 - [🤝 Contributing](#-contributing)  
-- [📄 License](#-license)  
-- [🆘 Support](#-support)  
+- [📄 License](#-license)   
 
 ---
 
@@ -76,20 +75,19 @@ A comprehensive **customer intelligence platform** that leverages **machine lear
 ---
 
 ### 📌 Example `requirements.txt`:  
-```txt
-Django==4.2.7
-djangorestframework==3.14.0
-django-cors-headers==4.3.1
-pandas==2.0.3
-scikit-learn==1.3.2
-xgboost==2.0.3
-joblib==1.3.2
-openpyxl==3.1.2
-psycopg2-binary==2.9.9
+- Django==4.2.7
+- djangorestframework==3.14.0
+- django-cors-headers==4.3.1
+- pandas==2.0.3
+- scikit-learn==1.3.2
+- xgboost==2.0.3
+- joblib==1.3.2
+- openpyxl==3.1.2
+- psycopg2-binary==2.9.9
 
 ---
 
-## 🌐 External Resource Dependencies
+### 🌐 External Resource Dependencies 
 | Resource               | Type | Required By             | Purpose                                 |
 | ---------------------- | ---- | ----------------------- | --------------------------------------- |
 | `churn_model.pkl`      | File | `main_pipeline.py`      | ML predictions                          |
@@ -100,7 +98,7 @@ psycopg2-binary==2.9.9
 
 ---
 
-## 🛠 Development & Build Tool Dependencies
+### 🛠 Development & Build Tool Dependencies
 | Tool           | Purpose                        |
 | -------------- | ------------------------------ |
 | Node.js (v16+) | Run frontend                   |
@@ -116,67 +114,69 @@ psycopg2-binary==2.9.9
 ## 🛠️ Technology Stack
 
 ### 🎨 Frontend
-Framework: React 18 + Vite ⚡
-Styling: Tailwind CSS
-Charts: Chart.js + react-chartjs-2
-Icons: Lucide React
-API Calls: Axios
+- Framework: React 18 + Vite ⚡  
+- Styling: Tailwind CSS  
+- Charts: Chart.js + react-chartjs-2
+- Icons: Lucide React
+- API Calls: Axios
 
 ---
 
 ### ⚙️ Backend
-Framework: Django 4.2+
-API: Django REST Framework
-Database: PostgreSQL / SQLite
-ML Libraries: Scikit-learn, XGBoost, LightGBM
-Data Processing: Pandas, NumPy
+- Framework: Django 4.2+
+- API: Django REST Framework
+- Database: PostgreSQL / SQLite
+- ML Libraries: Scikit-learn, XGBoost, LightGBM
+- Data Processing: Pandas, NumPy
 
 ---
 
-## 🤖 Machine Learning
-Model Persistence: Joblib
-Feature Engineering & Predictions: main_pipeline.py
+### 🤖 Machine Learning
+- Model Persistence: Joblib
+- Feature Engineering & Predictions: main_pipeline.py
 
 ---
 
 ## 🏗️ Architecture Diagram
-┌─────────────────┐    HTTP/JSON    ┌─────────────────┐    SQL    ┌─────────────────┐
-│   React Frontend │ ◄─────────────► │   Django API     │ ◄───────► │   Database       │
-│                 │                 │   Server        │          │   (PostgreSQL)  │
-│ - Dashboard     │                 │ - Views.py      │          │ - CDR Data      │
-│ - Analytics     │                 │ - Models.py     │          │ - Telco Data    │
-│ - Predictions   │    WebSocket    │ - URLs.py       │          │ - Support Data  │
-│ - Segments      │   (Optional)    └─────────────────┘          └─────────────────┘
-│ - Recommendations│
-└─────────────────┘
+
+```text
+┌──────────────────┐    HTTP/JSON    ┌─────────────────┐    SQL   ┌─────────────────┐  
+│  React Frontend  │ ◄─────────────► │   Django API    │ ◄───────►│   Database      │  
+│                  │                 │   Server        │          │   (PostgreSQL)  │  
+│ - Dashboard      │                 │ - Views.py      │          │ - CDR Data      │  
+│ - Analytics      │                 │ - Models.py     │          │ - Telco Data    │  
+│ - Predictions    │    WebSocket    │ - URLs.py       │          │ - Support Data  │  
+│ - Segments       │   (Optional)    └─────────────────┘          └─────────────────┘  
+│ - Recommendations│  
+└──────────────────┘
          │
          ▼
-┌─────────────────┐
-│   ML Pipeline    │
-│   (Python)       │
-│ - main_pipeline.py│
-│ - Model Files    │
-└─────────────────┘
-
+┌───────────────────┐  
+│   ML Pipeline     │  
+│   (Python)        │  
+│ - main_pipeline.py│  
+│ - Model Files     │  
+└───────────────────┘
+```
 ---
 
 ## 📁 File Structure
-Potential_Customers_for_Upcell/
-├── Frontend/
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Application pages
-│   │   ├── api/            # API service modules
-│   │   ├── database/       # Mock/sample data
-│   │   └── assets/css/     # Styling
-│   └── package.json
-├── Backend/
-│   ├── backend/            # Django settings & core
-│   ├── api/                # API app (models, views, serializers)
-│   └── requirements.txt
-├── Models/                 # Trained ML models
-├── Scripts/
-│   └── main_pipeline.py    # ML pipeline
+Potential_Customers_for_Upcell/  
+├── Frontend/  
+│   ├── src/  
+│   │   ├── components/     # Reusable UI components  
+│   │   ├── pages/          # Application pages  
+│   │   ├── api/            # API service modules  
+│   │   ├── database/       # Mock/sample data  
+│   │   └── assets/css/     # Styling  
+│   └── package.json  
+├── Backend/  
+│   ├── backend/            # Django settings & core  
+│   ├── api/                # API app (models, views, serializers)  
+│   └── requirements.txt  
+├── Models/                 # Trained ML models  
+├── Scripts/  
+│   └── main_pipeline.py    # ML pipeline  
 └── README.md
 
 ---
@@ -184,53 +184,53 @@ Potential_Customers_for_Upcell/
 ## 📄 File Explanations
 
 ### 🎨 Frontend Components
-Card.jsx → Reusable card UI
-Chart.jsx → Configurable charts
-Scatter.jsx → Scatter plots for segmentation
-Table.jsx → Dynamic data tables
-Form.jsx → File upload forms
+- Card.jsx → Reusable card UI
+- Chart.jsx → Configurable charts
+- Scatter.jsx → Scatter plots for segmentation
+- Table.jsx → Dynamic data tables
+- Form.jsx → File upload forms
 
 ---
 
 ### 📊 Pages
-Dashboard.jsx → KPIs & churn trends
-Analytics.jsx → Filters, usage charts, customer tables
-Prediction.jsx → ML predictions with CSV uploads
-Segments.jsx → Customer clustering visualizations
-Recommendations.jsx → AI-generated recommendations
+- Dashboard.jsx → KPIs & churn trends
+- Analytics.jsx → Filters, usage charts, customer tables
+- Prediction.jsx → ML predictions with CSV uploads
+- Segments.jsx → Customer clustering visualizations
+- Recommendations.jsx → AI-generated recommendations
 
 ---
 
 ### ⚙️ Backend Files
-models.py → Defines DB schema (CDR, Telco, Support)
-views.py → API endpoints
-urls.py → Routing
-serializers.py → Data serialization
+- models.py → Defines DB schema (CDR, Telco, Support)
+- views.py → API endpoints
+- urls.py → Routing
+- serializers.py → Data serialization
 
 ---
 
 ### 🤖 ML Pipeline
-main_pipeline.py → Data processing, feature engineering, prediction
+- main_pipeline.py → Data processing, feature engineering, prediction
 
 ---
 
-### 🔄 Data Flow
-Data Ingestion → CSV upload / API request
-Processing → ML pipeline (validation, prediction)
-Analysis → Results stored temporarily
-Output → Frontend charts, recommendations, exports
+## 🔄 Data Flow
+- Data Ingestion → CSV upload / API request
+- Processing → ML pipeline (validation, prediction)
+- Analysis → Results stored temporarily
+- Output → Frontend charts, recommendations, exports
 
 ---
 
 ## 📊 Input/Output Formats
 
 ### Input
-CSV Upload → phone_number, account_length, day_mins, etc.
-API → /api/cdr/, /api/telco/, /api/support/
+- CSV Upload → phone_number, account_length, day_mins, etc.
+- API → /api/cdr/, /api/telco/, /api/support/
 
 ### Output
-JSON API Responses → customer metrics & churn rate
-Prediction Results → churn probability, recommended products
+- JSON API Responses → customer metrics & churn rate
+- Prediction Results → churn probability, recommended products
 
 ---
 
@@ -238,16 +238,16 @@ Prediction Results → churn probability, recommended products
 
 Create a .env file in Backend/
 
-# Django Settings
-DEBUG=True
-SECRET_KEY=your-secret-key-here
+### Django Settings
+DEBUG=True  
+SECRET_KEY=your-secret-key-here  
 DATABASE_URL=postgresql://username:password@localhost:5432/upcell_db
 
-# ML Model Paths
-CHURN_MODEL_PATH=Models/churn_model.pkl
+### ML Model Paths
+CHURN_MODEL_PATH=Models/churn_model.pkl  
 USAGE_MODEL_PATH=Models/churn_usage_model.pkl
 
-# API Settings
+### API Settings
 CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 
 ---
@@ -255,54 +255,52 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ## 📦 Installation & Setup
 
 ### 🖥 Backend Setup
-git clone <repository-url>
-cd Potential_Customers_for_Upcell/Backend
+git clone <repository-url>  
+cd Potential_Customers_for_Upcell/Backend  
 
-python -m venv venv
+python -m venv venv  
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py createsuperuser
+pip install -r requirements.txt  
+python manage.py migrate  
+python manage.py createsuperuser  
 python manage.py runserver
 
 ### 🎨 Frontend Setup
-cd ../Frontend
-npm install
+cd ../Frontend  
+npm install  
 npm run dev
 
----
-
-## 🤖 ML Models Setup
-Place model files in Models/
-churn_model.pkl
+### 🤖 ML Models Setup
+Place model files in Models/  
+churn_model.pkl  
 churn_usage_model.pkl
 
 ---
 
 ## 🚀 Usage Guide
-Dashboard → Monitor churn rate & KPIs
-Predictions → Upload CSV for churn analysis
-Segments → Visualize customer clusters
-Recommendations → Get AI-driven suggestions
-Export → CSV/PDF reports
+- Dashboard → Monitor churn rate & KPIs
+- Predictions → Upload CSV for churn analysis
+- Segments → Visualize customer clusters
+- Recommendations → Get AI-driven suggestions
+- Export → CSV/PDF reports
 
 ---
 
 ## 🤝 Contributing
-We ❤️ contributions!
-Fork the repo
-Create a branch → git checkout -b feature/amazing-feature
-Commit changes → git commit -m 'Add amazing feature'
-Push branch → git push origin feature/amazing-feature
+We ❤️ contributions!  
+Fork the repo  
+Create a branch → git checkout -b feature/amazing-feature  
+Commit changes → git commit -m 'Add amazing feature  
+Push branch → git push origin feature/amazing-feature  
 Open a Pull Request 🚀
 
 ---
 
 ### Guidelines
-Follow PEP8 (Python)
-Use ESLint (JavaScript)
-Write tests 🧪
+Follow PEP8 (Python)  
+Use ESLint (JavaScript)  
+Write tests 🧪  
 Update docs 📖
 
 ---
