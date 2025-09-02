@@ -11,7 +11,7 @@ import {
   Download,
 } from "lucide-react";
 import "../../assets/css/main.css";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL } from '../config';
 
 const Analytics = () => {
   const [tenure, setTenure] = useState("");

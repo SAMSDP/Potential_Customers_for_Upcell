@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Home, TrendingUp, BarChart3, Brain, Users, Target, Crown, Shield, RefreshCw, FileText, Send, TrendingUp as TrendingUpIcon } from "lucide-react";
 import "../../assets/css/main.css";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL } from '../config';
 
 const Recommendations = () => {
   // State

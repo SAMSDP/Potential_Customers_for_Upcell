@@ -3,7 +3,7 @@ import { Home, TrendingUp, BarChart3, Brain, Users, Target, Heart, AlertTriangle
 import "../../assets/css/main.css";
 import Card from "../components/Card";
 import axios from "axios";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL } from '../config';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const Segments = () => {
