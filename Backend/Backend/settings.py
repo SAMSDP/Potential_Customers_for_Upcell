@@ -60,6 +60,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://actual-hamster-renewing.ngrok-free.app",  # any ngrok subdomain
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 ROOT_URLCONF = 'Backend.urls'
 

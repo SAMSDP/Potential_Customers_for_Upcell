@@ -23,7 +23,7 @@ console.log("API Base URL:", API_BASE_URL);
 
 // -------- API calls --------
 const fetchSummaryMetrics = async () => {
-  const response = await fetch(`https://actual-hamster-renewing.ngrok-free.app/dashboard/summary-metrics/`);
+  const response = await fetch("https://actual-hamster-renewing.ngrok-free.app/dashboard/summary-metrics/");
   return await response.json();
 };
 
