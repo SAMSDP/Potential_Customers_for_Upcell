@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Home, TrendingUp, BarChart3, Brain, Users, Target, Crown, Shield, RefreshCw, FileText, Send, TrendingUp as TrendingUpIcon } from "lucide-react";
 import "../../assets/css/main.css";
+import { API_BASE_URL } from "../config/api";
 
 const Recommendations = () => {
   // State
@@ -24,7 +25,7 @@ const Recommendations = () => {
   useEffect(() => {
     const fetchData = async () => {
       // Fetch summary
-      const summaryRes = await fetch("http://127.0.0.1:8000/recommendation/segments/summary/");
+      const summaryRes = await fetch(`${API_BASE_URL}/recommendation/segments/summary/`);
       const summaryData = await summaryRes.json();
       setSummary({
         loyal: summaryData.loyal.count,
@@ -36,7 +37,7 @@ const Recommendations = () => {
       });
 
       // Fetch recommendations
-      const recsRes = await fetch("http://127.0.0.1:8000/recommendation/segments/customers/");
+      const recsRes = await fetch(`${API_BASE_URL}/recommendation/segments/customers/`);
       const recsData = await recsRes.json();
       // Map API fields to internal fields
       const mapped = recsData.map(r => ({

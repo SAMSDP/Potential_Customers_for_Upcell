@@ -11,6 +11,7 @@ import {
   Download,
 } from "lucide-react";
 import "../../assets/css/main.css";
+import { API_BASE_URL } from "../config/api";
 
 const Analytics = () => {
   const [tenure, setTenure] = useState("");
@@ -84,35 +85,35 @@ const Analytics = () => {
       try {
         // Call Usage
         const usageRes = await fetch(
-          "http://127.0.0.1:8000/analytics/usage-vs-customers/"
+          `${API_BASE_URL}/analytics/usage-vs-customers/`
         );
         const usage = await usageRes.json();
         setCallUsageData(usage);
 
         // Customers by Contract
         const churnRes = await fetch(
-          "http://127.0.0.1:8000/analytics/customers-by-contract/"
+          `${API_BASE_URL}/analytics/customers-by-contract/`
         );
         const churn = await churnRes.json();
         setChurnDistributionData(churn);
 
         // Payment Methods
         const supportRes = await fetch(
-          "http://127.0.0.1:8000/analytics/payment-methods/"
+          `${API_BASE_URL}/analytics/payment-methods/`
         );
         const support = await supportRes.json();
         setSupportMetricsData(support);
 
         // Revenue Distribution
         const revRes = await fetch(
-          "http://127.0.0.1:8000/analytics/revenue-distribution/"
+          `${API_BASE_URL}/analytics/revenue-distribution/`
         );
         const revenue = await revRes.json();
         setRevenueDistributionData(revenue);
 
         // Customer Details
         const custRes = await fetch(
-          "http://127.0.0.1:8000/analytics/customer-details/"
+          `${API_BASE_URL}/analytics/customer-details/`
         );
         const custData = await custRes.json();
         setAllCustomers(custData.customers || []);

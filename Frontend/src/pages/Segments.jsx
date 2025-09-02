@@ -3,6 +3,7 @@ import { Home, TrendingUp, BarChart3, Brain, Users, Target, Heart, AlertTriangle
 import "../../assets/css/main.css";
 import Card from "../components/Card";
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const Segments = () => {
@@ -16,7 +17,7 @@ const Segments = () => {
 
   const fetchSegmentCounts = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/segments/customer-segments/");
+      const res = await axios.get(`${API_BASE_URL}/segments/customer-segments/`);
       setStats(prev => ({
         ...prev,
         loyal: res.data.loyal,
@@ -30,7 +31,7 @@ const Segments = () => {
 
   const fetchSegmentTenure = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/segments/customer-segments-tenure/");
+      const res = await axios.get(`${API_BASE_URL}/segments/customer-segments-tenure/`);
       const mapTenure = arr => arr.map(t => ({ tenure: t, score: Math.floor(Math.random() * 100) + 1 }));
       setTenureData({
         loyal: mapTenure(res.data.loyal?.tenure || []),
@@ -44,7 +45,7 @@ const Segments = () => {
 
   const fetchSegmentMetrics = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/segments/customer-segments-metrics/");
+      const res = await axios.get(`${API_BASE_URL}/segments/customer-segments-metrics/`);
       setMetrics({
         loyal: res.data.loyal || { count: 0, avg_tenure: 0, avg_revenue: 0, avg_churn_rate: 0 },
         neutral: res.data.neutral || { count: 0, avg_tenure: 0, avg_revenue: 0, avg_churn_rate: 0 },

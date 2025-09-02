@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/main.css";
+import { API_BASE_URL } from "../config/api";
 
 const Prediction = () => {
   const [processing, setProcessing] = useState(false);
@@ -31,7 +32,7 @@ const Prediction = () => {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/prediction/upload/", {
+      const res = await fetch(`${API_BASE_URL}/prediction/upload/`, {
         method: "POST",
         body: formData,
       });
@@ -63,7 +64,7 @@ const Prediction = () => {
   const pollResults = async (id) => {
     const interval = setInterval(async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/prediction/results/${id}/`);
+        const res = await fetch(`${API_BASE_URL}/prediction/results/${id}/`);
 
         if (res.status === 200) {
           const data = await res.json();
