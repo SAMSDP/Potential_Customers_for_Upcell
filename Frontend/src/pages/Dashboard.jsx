@@ -19,6 +19,8 @@ import { API_BASE_URL } from "../config/api";
 import { Chart as ChartJS } from "chart.js/auto"; // ✅ auto-registers all chart types & plugins
 import { Chart } from "react-chartjs-2"; // ✅ wrapper from react-chartjs-2
 
+console.log("API Base URL:", API_BASE_URL);
+
 // -------- API calls --------
 const fetchSummaryMetrics = async () => {
   const response = await fetch(`${API_BASE_URL}/dashboard/summary-metrics/`);

@@ -18,7 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=True, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",")
+# Example if using python-decouple or os.environ
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -55,6 +56,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # React app's address
     "http://127.0.0.1:5500",
+    "https://potential-customers-for-upcell.vercel.app",  # without /
+    "https://actual-hamster-renewing.ngrok-free.app",  # any ngrok subdomain
 ]
 
 
