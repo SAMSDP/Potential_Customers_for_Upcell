@@ -14,7 +14,7 @@ import {
   IndianRupee,
 } from "lucide-react";
 import "../../assets/css/main.css";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL } from '../config';
 
 import { Chart as ChartJS } from "chart.js/auto"; // ✅ auto-registers all chart types & plugins
 import { Chart } from "react-chartjs-2"; // ✅ wrapper from react-chartjs-2
