@@ -1,4 +1,4 @@
-# 📊 Potential Customers for Upcell  
+# 📊 Potential Customers for Upsell  
 
 A comprehensive **customer intelligence platform** that leverages **machine learning** to identify upsell opportunities, predict churn risk, and provide actionable recommendations for telecommunications companies.  
 
@@ -22,7 +22,7 @@ A comprehensive **customer intelligence platform** that leverages **machine lear
 ---
 
 ## 🚀 Project Overview  
-**Potential Customers for Upcell** provides:  
+**Potential Customers for Upsell** provides:  
 ✨ Real-time analytics dashboard  
 🤖 ML-powered churn prediction & upsell opportunities  
 📊 Customer segmentation & insights  
@@ -139,6 +139,8 @@ A comprehensive **customer intelligence platform** that leverages **machine lear
 
 ## 🏗️ Architecture Diagram
 
+![alt text](<WhatsApp Image 2025-09-03 at 09.08.56.jpeg>)
+
 ```text
 ┌──────────────────┐    HTTP/JSON    ┌─────────────────┐    SQL   ┌─────────────────┐  
 │  React Frontend  │ ◄─────────────► │   Django API    │ ◄───────►│   Database      │  
@@ -161,7 +163,7 @@ A comprehensive **customer intelligence platform** that leverages **machine lear
 ---
 
 ## 📁 File Structure
-Potential_Customers_for_Upcell/  
+Potential_Customers_for_Upsell/  
 ├── Frontend/  
 │   ├── src/  
 │   │   ├── components/     # Reusable UI components  
@@ -256,7 +258,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 
 ### 🖥 Backend Setup
 git clone <repository-url>  
-cd Potential_Customers_for_Upcell/Backend  
+cd Potential_Customers_for_Upsell/Backend  
 
 python -m venv venv  
 source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -309,3 +311,4 @@ Update docs 📖
 Licensed under the MIT License – see the LICENSE file.
 
 ---
+
