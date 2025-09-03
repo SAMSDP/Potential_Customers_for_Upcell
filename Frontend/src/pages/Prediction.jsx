@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
 import {
   Home, TrendingUp, BarChart3, Brain, Users, Target,
-  UploadCloud, FilePlus, AlertTriangle, FileText
+  UploadCloud, FilePlus, AlertTriangle, FileText,
+  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/main.css";
@@ -14,8 +15,17 @@ const Prediction = () => {
   const [summary, setSummary] = useState({ processed: 0, highRisk: 0, upsell: 0, neutral: 0 });
   const [finalResponse, setFinalResponse] = useState(null);
   const [jobId, setJobId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const fileInput = useRef();
   const navigate = useNavigate();
+
+  // Pagination settings
+  const rowsPerPage = 15;
+
+  // Calculate pagination values
+  const totalPages = Math.ceil(results.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const paginatedResults = results.slice(startIndex, startIndex + rowsPerPage);
 
   // Upload file → backend returns job_id
   const handleFileUpload = async (e) => {
@@ -27,6 +37,7 @@ const Prediction = () => {
     setResultsReady(false);
     setFinalResponse(null);
     setJobId(null);
+    setCurrentPage(1); // Reset to first page on new upload
 
     const formData = new FormData();
     formData.append("file", file);
@@ -100,8 +111,8 @@ const Prediction = () => {
 
             // Summary counts
             const highRisk = data.results.filter(r => r.Churn_Prediction === 1).length;
-            const upsell = data.results.filter(r => r.Usage_Category === 2).length; // High usage
-            const neutral = data.results.filter(r => r.Usage_Category === 0).length; // Low usage
+            const upsell = transformed.filter(r => r.businessAction === "Upsell Offer").length;
+            const neutral = transformed.filter(r => r.businessAction === "Engagement Offer").length;
 
             setSummary({
               processed: data.results.length,
@@ -138,6 +149,12 @@ const Prediction = () => {
     return "badge-blue";
   };
 
+  // Pagination handlers
+  const goToPage = (page) => {
+    const pageNumber = Math.max(1, Math.min(page, totalPages));
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="prediction-page">
       {/* Sidebar */}
@@ -167,7 +184,7 @@ const Prediction = () => {
           <div className="upload-section">
             <div className="chart-card" style={{ textAlign: "center", padding: "3rem" }}>
               <div style={{ marginBottom: "2rem" }}>
-                <UploadCloud size={64} style={{ color: "var(--primary-blue)", marginBottom: "1rem" }} />
+                <UploadCloud size={64} style={{ color: "var(--primary-blue)", marginBottom: "1rem", marginLeft: "30rem" }} />
                 <h3>Upload CDR Data</h3>
                 <p style={{ color: "var(--gray-600)", marginBottom: "2rem" }}>
                   Upload CSV or Excel file with Call Detail Records for ML analysis
@@ -253,7 +270,7 @@ const Prediction = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {results.map((result, index) => (
+                    {paginatedResults.map((result, index) => (
                       <tr key={index}>
                         <td>{result.phoneNumber}</td>
                         <td>
@@ -272,6 +289,62 @@ const Prediction = () => {
                     ))}
                   </tbody>
                 </table>
+                
+                {/* Pagination Controls */}
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  padding: '1rem 1.5rem',
+                  borderTop: '1px solid var(--gray-200)'
+                }}>
+                  <div style={{ color: 'var(--gray-600)' }}>
+                    Showing {startIndex + 1} to {Math.min(startIndex + rowsPerPage, results.length)} of {results.length} results
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button 
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => goToPage(1)}
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronsLeft size={16} />
+                    </button>
+                    
+                    <button 
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      padding: '0 0.5rem',
+                      color: 'var(--gray-700)'
+                    }}>
+                      Page {currentPage} of {totalPages}
+                    </div>
+                    
+                    <button 
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                    
+                    <button 
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => goToPage(totalPages)}
+                      disabled={currentPage === totalPages}
+                    >
+                      <ChevronsRight size={16} />
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {/* Segments Navigation */}
@@ -279,8 +352,8 @@ const Prediction = () => {
                 <button
                   className="btn btn-primary"
                   onClick={() => navigate("/segments_model", { state: { apiResponse: finalResponse } })}
-              >
-                Go to Segments →
+                >
+                  Go to Segments →
                 </button>
               </div>
             </div>

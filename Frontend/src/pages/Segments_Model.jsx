@@ -1,7 +1,7 @@
 // SegmentsClient.jsx
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useNavigate } from 'react-router-dom'; // ADD THIS IMPORT
+import { useNavigate } from 'react-router-dom';
 import {
   Home,
   TrendingUp,
@@ -60,9 +60,9 @@ function categorize_customer(churn_prob, avg_prob, tolerance = 0.05) {
 const SegmentsModel = () => {
   const location = useLocation();
   const { apiResponse } = location.state || {};
-  const navigate = useNavigate(); // ADD THIS LINE
+  const navigate = useNavigate();
 
-  const [finalResponse, setFinalResponse] = useState(apiResponse); // ADD THIS LINE
+  const [finalResponse, setFinalResponse] = useState(apiResponse);
 
   const [stats, setStats] = useState({
     loyal: 0,
@@ -111,6 +111,21 @@ const SegmentsModel = () => {
       at_risk: { avg_tenure: 0, avg_revenue: 0, avg_churn_rate: 0, count: 0 },
     };
 
+    // Calculate realistic revenue based on usage category and tenure
+    const calculateRevenue = (usageCategory, tenure) => {
+      // Base monthly revenue by usage category
+      const baseRevenue = {
+        "Low": 20,
+        "Medium": 45,
+        "High": 80
+      };
+      
+      // Tenure bonus (longer tenure = higher revenue)
+      const tenureBonus = Math.min(tenure * 0.5, 25);
+      
+      return baseRevenue[usageCategory] + tenureBonus;
+    };
+
     apiResponse.forEach((customer) => {
       const churnProb = getChurnProb(customer);
       if (!Number.isFinite(churnProb)) return;
@@ -124,18 +139,16 @@ const SegmentsModel = () => {
       segment_counts_with_tenure[segment].count += 1;
       segment_counts_with_tenure[segment].tenure.push(customer.tenure);
 
-      // Revenue calc
-      const revenue =
-        (customer.day_charge || 0) +
-        (customer.eve_charge || 0) +
-        (customer.night_charge || 0) +
-        (customer.intl_charge || 0);
+      // Calculate revenue based on usage category and tenure
+      const revenue = calculateRevenue(customer.usageCategory, customer.tenure);
+
+      // Calculate churn probability for metrics (convert to percentage)
+      const churnRate = churnProb * 100;
 
       // Metrics
       segment_metrics[segment].avg_tenure += customer.tenure || 0;
       segment_metrics[segment].avg_revenue += revenue;
-      segment_metrics[segment].avg_churn_rate +=
-        customer.churn_prediction || 0;
+      segment_metrics[segment].avg_churn_rate += churnRate;
       segment_metrics[segment].count += 1;
     });
 
@@ -145,9 +158,7 @@ const SegmentsModel = () => {
       if (count > 0) {
         segment_metrics[seg].avg_tenure /= count;
         segment_metrics[seg].avg_revenue /= count;
-        // Already binary (0/1) → take mean, convert to %
-        segment_metrics[seg].avg_churn_rate =
-          (segment_metrics[seg].avg_churn_rate / count) * 100;
+        segment_metrics[seg].avg_churn_rate /= count;
       }
     }
 
@@ -470,9 +481,9 @@ const SegmentsModel = () => {
             <button
               className="btn btn-primary"
               onClick={() => navigate("/recommendations_models", { state: { apiResponse: finalResponse } })}
-          >
-            Go to Recommendations →
-          </button>
+            >
+              Go to Recommendations →
+            </button>
           </div>
         </div>
       </main>

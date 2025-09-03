@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Home, TrendingUp, BarChart3, Brain, Users, Target, Crown, Shield, RefreshCw, FileText, Send, TrendingUp as TrendingUpIcon } from "lucide-react";
 import "../../assets/css/main.css";
 
 const RecommendationsModel = () => {
+  const location = useLocation();
+  const { apiResponse } = location.state || {};
+  
   // State
   const [summary, setSummary] = useState({
     loyal: 0,
@@ -20,45 +24,94 @@ const RecommendationsModel = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
-  // Fetch summary and recommendations once
+  // Process data from API response
   useEffect(() => {
-    const fetchData = async () => {
-      // Fetch summary
-      const summaryRes = await fetch("http://127.0.0.1:8000/recommendation/segments/summary/");
-      const summaryData = await summaryRes.json();
-      setSummary({
-        loyal: summaryData.loyal.count,
-        atRisk: summaryData.at_risk.count,
-        neutral: summaryData.neutral.count,
-        conversionRate: summaryData.loyal.percentage + "%",
-        retentionRate: summaryData.at_risk.percentage + "%",
-        engagementRate: summaryData.neutral.percentage + "%",
-      });
+    if (!apiResponse || apiResponse.length === 0) return;
 
-      // Fetch recommendations
-      const recsRes = await fetch("http://127.0.0.1:8000/recommendation/segments/customers/");
-      const recsData = await recsRes.json();
-      // Map API fields to internal fields
-      const mapped = recsData.map(r => ({
-        ...r,
-        type:
-          r.opportunity === "Upcell Opportunity" ? "upsell" :
-          r.opportunity === "Retention Opportunity" ? "retention" :
-          r.opportunity === "Engagement Opportunity" ? "engagement" : "",
-        priority:
-          r.churn_probability < 20 ? "high" :
-          r.churn_probability <= 50 ? "medium" : "low",
-      }));
-      setAllRecommendations(mapped);
-      setRecommendations(mapped);
-    };
-    fetchData();
-  }, []);
+    // Transform API response to match the expected format
+    const transformedData = apiResponse.map(customer => {
+      // Calculate churn probability (ensure it's a number between 0-100)
+      const churnProbability = parseFloat(customer.churnProbability) || 0;
+      
+      // Determine customer segment based on churn probability
+      let customerSegment = "neutral";
+      if (churnProbability < 30) customerSegment = "loyal";
+      else if (churnProbability > 70) customerSegment = "at-risk";
+      
+      // Determine opportunity type based on business action
+      let opportunity = "Engagement Opportunity";
+      if (customer.businessAction === "Upsell Offer") opportunity = "Upsell Opportunity";
+      else if (customer.businessAction === "Retention Offer") opportunity = "Retention Opportunity";
+      
+      // Determine priority based on churn probability
+      let priorityLevel = "medium";
+      if (churnProbability < 20) priorityLevel = "high";
+      else if (churnProbability > 50) priorityLevel = "low";
+      
+      // Calculate potential revenue based on usage category and tenure
+      const baseRevenue = {
+        "Low": 500,
+        "Medium": 1200,
+        "High": 2500
+      };
+      
+      const tenureBonus = Math.min(customer.tenure * 50, 1500);
+      const potentialRevenue = baseRevenue[customer.usageCategory] + tenureBonus;
+      
+      // Calculate acceptance score (inverse of churn probability)
+      const acceptanceScore = 100 - churnProbability;
+      
+      return {
+        phone_number: customer.phoneNumber,
+        customer_segment: customerSegment,
+        opportunity: opportunity,
+        churn_probability: churnProbability,
+        revenue: potentialRevenue,
+        type: opportunity.toLowerCase().replace(" opportunity", ""),
+        priority: priorityLevel,
+        acceptance_score: acceptanceScore
+      };
+    });
+
+    // Calculate summary statistics
+    const loyalCount = transformedData.filter(r => r.customer_segment === "loyal").length;
+    const atRiskCount = transformedData.filter(r => r.customer_segment === "at-risk").length;
+    const neutralCount = transformedData.filter(r => r.customer_segment === "neutral").length;
+    const totalCount = transformedData.length;
+    
+    // Calculate average acceptance scores for each segment
+    const loyalAvgScore = loyalCount > 0 
+      ? transformedData.filter(r => r.customer_segment === "loyal")
+          .reduce((sum, r) => sum + r.acceptance_score, 0) / loyalCount
+      : 0;
+          
+    const atRiskAvgScore = atRiskCount > 0 
+      ? transformedData.filter(r => r.customer_segment === "at-risk")
+          .reduce((sum, r) => sum + r.acceptance_score, 0) / atRiskCount
+      : 0;
+          
+    const neutralAvgScore = neutralCount > 0 
+      ? transformedData.filter(r => r.customer_segment === "neutral")
+          .reduce((sum, r) => sum + r.acceptance_score, 0) / neutralCount
+      : 0;
+
+    setSummary({
+      loyal: loyalCount,
+      atRisk: atRiskCount,
+      neutral: neutralCount,
+      conversionRate: `${Math.round(loyalAvgScore)}%`,
+      retentionRate: `${Math.round(atRiskAvgScore)}%`,
+      engagementRate: `${Math.round(neutralAvgScore)}%`,
+    });
+
+    setAllRecommendations(transformedData);
+    setRecommendations(transformedData);
+  }, [apiResponse]);
 
   // Reset to first page when filters change
   useEffect(() => {
     applyFilters();
-  }, [segment, priority, type]);
+  }, [segment, priority, type, allRecommendations]);
 
   // Apply frontend filters
   const applyFilters = () => {
@@ -228,7 +281,7 @@ const RecommendationsModel = () => {
                   </div>
                   <div style={{margin: '8px 0'}}>
                     <span style={{background: '#f3f4f6', color: '#374151', borderRadius: 6, padding: '2px 10px', fontSize: 13, fontWeight: 500}}>
-                      {rec.type === 'retention' ? 'Retention Opportunity' : rec.type === 'engagement' ? 'Engagement Opportunity' : 'Upsell Opportunity'}
+                      {rec.opportunity}
                     </span>
                   </div>
                   <div style={{marginBottom: 16, color: '#444', fontSize: 15}}>
@@ -239,7 +292,7 @@ const RecommendationsModel = () => {
                   <div style={{display: 'flex', gap: '2rem'}}>
                     <div style={{background: '#f9fafb', borderRadius: 12, padding: '1rem', flex: 1, textAlign: 'center'}}>
                       <div style={{fontWeight: 700, fontSize: 22}}>
-                        {rec.churn_probability !== undefined ? `${Math.round(100 - rec.churn_probability)}%` : '—'}
+                        {rec.acceptance_score !== undefined ? `${Math.round(rec.acceptance_score)}%` : '—'}
                       </div>
                       <div style={{fontSize: 13, color: '#888'}}>Acceptance Score</div>
                     </div>

@@ -72,16 +72,6 @@ usage_category = churn_pred[:, 1]  # assuming 2nd column is usage_category
 signal("CDR Model Inference", "done")
 
 # ===========================
-# 3. SUPPORT MODEL INFERENCE
-# ===========================
-signal("Support Model Inference", "start")
-
-# If you have additional support models, run them here
-# Currently skipping (placeholder)
-
-signal("Support Model Inference", "done")
-
-# ===========================
 # 4. TELCO MODEL
 # ===========================
 signal("Telco Model", "start")

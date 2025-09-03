@@ -826,7 +826,7 @@ body {
 }
 
 .metric-value {
-  font-size: 2rem;
+  font-size: 15px;
   font-weight: 700;
   color: #222;
   display: block;
