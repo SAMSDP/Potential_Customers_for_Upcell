@@ -79,3 +79,30 @@ class CustomerSupportTickets(models.Model):
         managed = False
         db_table = "customer_support_tickets"
 
+class FinalOut(models.Model):
+    phone_number = models.CharField(max_length=20, primary_key=True, db_column="phone_number")
+    account_length = models.IntegerField(db_column="account_length")
+    vmail_message = models.IntegerField(db_column="vmail_message")
+    day_mins = models.FloatField(db_column="day_mins")
+    day_calls = models.IntegerField(db_column="day_calls")
+    day_charge = models.FloatField(db_column="day_charge")
+    eve_mins = models.FloatField(db_column="eve_mins")
+    eve_calls = models.IntegerField(db_column="eve_calls")
+    eve_charge = models.FloatField(db_column="eve_charge")
+    night_mins = models.FloatField(db_column="night_mins")
+    night_calls = models.IntegerField(db_column="night_calls")
+    night_charge = models.FloatField(db_column="night_charge")
+    intl_mins = models.FloatField(db_column="intl_mins")
+    intl_calls = models.IntegerField(db_column="intl_calls")
+    intl_charge = models.FloatField(db_column="intl_charge")
+    custserv_calls = models.IntegerField(db_column="custserv_calls")
+    churn_prediction = models.IntegerField(db_column="churn_prediction")
+    usage_category = models.IntegerField(db_column="usage_category")
+    churn_probability = models.FloatField(db_column="churn_probability")
+    recommended_products = models.TextField(db_column="recommended_products")
+    top_10_features = models.TextField(db_column="top_10_features")
+    tenure = models.IntegerField(db_column="tenure")
+
+    class Meta:
+        managed = False
+        db_table = "final_out"

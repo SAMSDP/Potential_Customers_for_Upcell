@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=True, cast=bool)
+# Example if using python-decouple or os.environ
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",")
 
 INSTALLED_APPS = [
@@ -35,9 +36,13 @@ INSTALLED_APPS = [
     "prediction",
     "segments",
     "recommendation",
+
+    # Other apps
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -45,7 +50,15 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',  # React app's address
+    "http://127.0.0.1:5500",
+    "https://potential-customers-for-upcell.vercel.app"
+]
+
 
 ROOT_URLCONF = 'Backend.urls'
 

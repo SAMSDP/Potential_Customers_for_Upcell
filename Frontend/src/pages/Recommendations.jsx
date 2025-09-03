@@ -1,40 +1,90 @@
-import React, { useState } from "react";
-import { Home, TrendingUp, BarChart3, Brain, Users, Target, Crown, Shield, Download, RefreshCw, FileText, Send, TrendingUp as TrendingUpIcon, Calendar } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Home, TrendingUp, BarChart3, Brain, Users, Target, Crown, Shield, RefreshCw, FileText, Send, TrendingUp as TrendingUpIcon } from "lucide-react";
 import "../../assets/css/main.css";
-import { getRecommendations, getRecommendationSummary } from "../api/sampleApi";
-
-
-
+import { API_BASE_URL } from '../config';
 
 const Recommendations = () => {
-  // State for recommendations and filters
+  // State
+  const [summary, setSummary] = useState({
+    loyal: 0,
+    atRisk: 0,
+    neutral: 0,
+    conversionRate: "0%",
+    retentionRate: "0%",
+    engagementRate: "0%",
+  });
+  const [allRecommendations, setAllRecommendations] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
-  const [summary, setSummary] = useState({ loyal: 0, atRisk: 0, neutral: 0, conversionRate: '0%', retentionRate: '0%', engagementRate: '0%' });
   const [segment, setSegment] = useState("");
   const [priority, setPriority] = useState("");
   const [type, setType] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
-  React.useEffect(() => {
-    // Fetch summary for cards
-    const s = getRecommendationSummary();
-    setSummary(s);
-    // Fetch all recommendations for pagination
-    const recs = getRecommendations({ segment, priority, type });
-    setRecommendations(recs);
+  // Fetch summary and recommendations once
+  useEffect(() => {
+    const fetchData = async () => {
+      // Fetch summary
+      const summaryRes = await fetch(`${API_BASE_URL}/recommendation/segments/summary/`);
+      const summaryData = await summaryRes.json();
+      setSummary({
+        loyal: summaryData.loyal.count,
+        atRisk: summaryData.at_risk.count,
+        neutral: summaryData.neutral.count,
+        conversionRate: summaryData.loyal.percentage + "%",
+        retentionRate: summaryData.at_risk.percentage + "%",
+        engagementRate: summaryData.neutral.percentage + "%",
+      });
+
+      // Fetch recommendations
+      const recsRes = await fetch(`${API_BASE_URL}/recommendation/segments/customers/`);
+      const recsData = await recsRes.json();
+      // Map API fields to internal fields
+      const mapped = recsData.map(r => ({
+        ...r,
+        type:
+          r.opportunity === "Upcell Opportunity" ? "upsell" :
+          r.opportunity === "Retention Opportunity" ? "retention" :
+          r.opportunity === "Engagement Opportunity" ? "engagement" : "",
+        priority:
+          r.churn_probability < 20 ? "high" :
+          r.churn_probability <= 50 ? "medium" : "low",
+      }));
+      setAllRecommendations(mapped);
+      setRecommendations(mapped);
+    };
+    fetchData();
+  }, []);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    applyFilters();
   }, [segment, priority, type]);
 
-  // Reset to first page only when filters change
-  React.useEffect(() => {
+  // Apply frontend filters
+  const applyFilters = () => {
+    let filtered = allRecommendations;
+    if (segment) filtered = filtered.filter(r => r.customer_segment.toLowerCase() === segment);
+    if (type) filtered = filtered.filter(r => r.type === type);
+    if (priority) filtered = filtered.filter(r => r.priority === priority);
+    setRecommendations(filtered);
     setCurrentPage(1);
-  }, [segment, priority, type]);
+  };
 
-  // Handler stubs
-  const applyFilters = () => {};
-  const generateRecommendations = () => {};
-  const exportRecommendations = format => {};
-  const sendToSalesTeam = () => {};
+  const generateRecommendations = () => {
+    // Optionally refetch or regenerate
+    applyFilters();
+  };
+
+  const exportRecommendations = format => {
+    // Implement export logic if needed
+    console.log(`Export ${format}`);
+  };
+
+  const sendToSalesTeam = () => {
+    // Implement sending logic
+    console.log("Sent to Sales Team");
+  };
 
   return (
     <div className="recommendations-page">
@@ -59,6 +109,7 @@ const Recommendations = () => {
         </header>
 
         <div className="recommendations-dashboard">
+          {/* Summary Cards */}
           <div className="strategy-overview">
             <div className="strategy-card loyal">
               <div className="strategy-header"><Crown size={24} /><h3>Loyal Customers</h3></div>
@@ -92,6 +143,7 @@ const Recommendations = () => {
             </div>
           </div>
 
+          {/* Filters Section */}
           <div className="filters-section" style={{background: 'white', padding: '1.5rem', borderRadius: 16, margin: '2rem 0', boxShadow: 'var(--shadow-md)'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
               <h3>Filter Recommendations</h3>
@@ -131,6 +183,7 @@ const Recommendations = () => {
             </div>
           </div>
 
+          {/* Recommendations Grid */}
           <div className="recommendations-grid" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
@@ -145,7 +198,7 @@ const Recommendations = () => {
                 return <div style={{gridColumn: '1 / -1', textAlign: 'center', color: '#888'}}>No recommendations</div>;
               }
               return paginatedRecommendations.map((rec, idx) => (
-                <div key={`${rec.customer_id}_${startIdx + idx}`} style={{
+                <div key={`${rec.phone_number}_${startIdx + idx}`} style={{
                   background: '#fff',
                   borderRadius: 16,
                   boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
@@ -160,8 +213,8 @@ const Recommendations = () => {
                       {startIdx + idx + 1}
                     </div>
                     <div>
-                      <div style={{fontWeight: 600, fontSize: 18}}>Customer {rec.customer_id ? rec.customer_id.replace(/\D/g, '') : startIdx + idx + 1}</div>
-                      <div style={{fontSize: 14, color: '#888'}}>{rec.customer_id || '-'}</div>
+                      <div style={{fontWeight: 600, fontSize: 18}}>Customer {rec.phone_number.replace(/\D/g, '')}</div>
+                      <div style={{fontSize: 14, color: '#888'}}>{rec.phone_number}</div>
                     </div>
                     <div style={{marginLeft: 'auto'}}>
                       {(() => {
@@ -180,7 +233,6 @@ const Recommendations = () => {
                     </span>
                   </div>
                   <div style={{marginBottom: 16, color: '#444', fontSize: 15}}>
-                    {/* Example description, you can customize this logic */}
                     {rec.type === 'retention' && 'Immediate retention offer with 20% discount and dedicated support. Address service concerns proactively.'}
                     {rec.type === 'engagement' && 'Introduce mid-tier service upgrades and personalized usage insights to increase engagement.'}
                     {rec.type === 'upsell' && 'Offer premium plan upgrades and exclusive features to loyal customers.'}
@@ -188,15 +240,13 @@ const Recommendations = () => {
                   <div style={{display: 'flex', gap: '2rem'}}>
                     <div style={{background: '#f9fafb', borderRadius: 12, padding: '1rem', flex: 1, textAlign: 'center'}}>
                       <div style={{fontWeight: 700, fontSize: 22}}>
-                        {rec.churn_probability !== undefined ? `${Math.round((1 - rec.churn_probability) * 100)}%` : '—'}
+                        {rec.churn_probability !== undefined ? `${Math.round(100 - rec.churn_probability)}%` : '—'}
                       </div>
                       <div style={{fontSize: 13, color: '#888'}}>Acceptance Score</div>
                     </div>
                     <div style={{background: '#f9fafb', borderRadius: 12, padding: '1rem', flex: 1, textAlign: 'center'}}>
                       <div style={{fontWeight: 700, fontSize: 22}}>
-                        {rec.day_charge !== undefined && rec.eve_charge !== undefined && rec.night_charge !== undefined
-                          ? `₹${Math.round((Number(rec.day_charge) + Number(rec.eve_charge) + Number(rec.night_charge)) * 83).toLocaleString('en-IN')}`
-                          : '₹—'}
+                        {rec.revenue !== undefined ? `₹${Math.round(rec.revenue).toLocaleString('en-IN')}` : '₹—'}
                       </div>
                       <div style={{fontSize: 13, color: '#888'}}>Potential Revenue</div>
                     </div>
@@ -204,11 +254,9 @@ const Recommendations = () => {
                 </div>
               ));
             })()}
-
-          {/* Close recommendations-grid */}
           </div>
 
-          {/* Pagination Controls */}
+          {/* Pagination */}
           {recommendations.length > pageSize && (
             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, margin: '2rem 0'}}>
               <button className="btn btn-secondary" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>Previous</button>
@@ -217,6 +265,7 @@ const Recommendations = () => {
             </div>
           )}
 
+          {/* Export Section */}
           <div className="export-section">
             <div className="chart-card">
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -227,7 +276,6 @@ const Recommendations = () => {
                 <div style={{display: 'flex', gap: '1rem'}}>
                   <button className="btn btn-secondary" onClick={() => exportRecommendations('csv')}><FileText size={16} style={{marginRight: 4}} />Export CSV</button>
                   <button className="btn btn-secondary" onClick={() => exportRecommendations('pdf')}><FileText size={16} style={{marginRight: 4}} />Export PDF Report</button>
-                  <button className="btn btn-success" onClick={sendToSalesTeam}><Send size={16} style={{marginRight: 4}} />Send to Sales Team</button>
                 </div>
               </div>
             </div>

@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import CdrAnalyticsView, TelcoAnalyticsView, SupportAnalyticsView
+from . import views
 
 urlpatterns = [
-    path("cdr/", CdrAnalyticsView.as_view(), name="cdr-analytics"),
-    path("telco/", TelcoAnalyticsView.as_view(), name="telco-analytics"),
-    path("support/", SupportAnalyticsView.as_view(), name="support-analytics"),
+    path("usage-vs-customers/", views.usage_vs_customers, name="usage_vs_customers"),
+    path("customers-by-contract/", views.customers_by_contract, name="customers_by_contract"),
+    path("payment-methods/", views.payment_methods, name="payment_methods"),
+    path("revenue-distribution/", views.revenue_distribution, name="revenue_distribution"),
+    path("customer-details/", views.customer_details, name="customer_details"),
 ]

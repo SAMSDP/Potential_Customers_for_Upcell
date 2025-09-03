@@ -61,3 +61,65 @@ export function getRecommendationSummary() {
     engagementRate: bySegment.neutral.length ? "12%" : "0%",
   };
 }
+
+import sample from "../database/sample.js";
+
+
+export function getSegmentStats() {
+  const segments = [
+    { key: "loyal", match: seg => seg === "loyal" },
+    { key: "atRisk", match: seg => seg === "atrisk" || seg === "at-risk" || seg === "highvalue" },
+    { key: "neutral", match: seg => seg === "neutral" || seg === "pricesensitive" }
+  ];
+  const stats = {};
+  let totalLTV = 0, totalCount = 0;
+  const INR_RATE = 83;
+
+  segments.forEach(({ key, match }) => {
+    const filtered = sample.data.filter(c => {
+      const seg = (c.customer_segment || c.segment || "")
+        .replace(/[-_\s]/g, "")
+        .toLowerCase();
+      return match(seg);
+    });
+    const count = filtered.length;
+    const avgTenure = count ? Math.round(filtered.reduce((a, b) => a + (b.tenure || b.tenure_months || 0), 0) / count) : 0;
+    // Calculate avgRevenue as sum of day_charge + eve_charge + night_charge (per month)
+    const avgRevenue = count
+      ? Math.round(
+          filtered.reduce(
+            (a, b) =>
+              a +
+              ((b.day_charge || 0) +
+                (b.eve_charge || 0) +
+                (b.night_charge || 0)),
+            0
+          ) / count
+        )
+      : 0;
+    const churnRate = count ? (100 * filtered.filter(c => c.churned || c.churn_prediction === 1).length / count).toFixed(1) : "0.0";
+    // Calculate LTV for each customer and sum
+    totalLTV += filtered.reduce(
+      (a, b) =>
+        a +
+        (((b.day_charge || 0) + (b.eve_charge || 0) + (b.night_charge || 0)) *
+          (b.tenure || b.tenure_months || 0)),
+      0
+    );
+    totalCount += count;
+    stats[key] = { count, avgTenure, avgRevenue, churnRate };
+  });
+
+  // Calculate average LTV and convert to INR
+  stats.avgLTV =
+    totalCount && totalLTV
+      ? `₹${Math.round((totalLTV / totalCount) * INR_RATE).toLocaleString("en-IN")}`
+      : "₹0";
+  // Also convert avgRevenue to INR for each segment
+  Object.keys(stats).forEach(key => {
+    if (stats[key].avgRevenue !== undefined) {
+      stats[key].avgRevenue = `₹${Math.round(stats[key].avgRevenue * INR_RATE).toLocaleString("en-IN")}`;
+    }
+  });
+  return stats;
+}
