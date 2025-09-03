@@ -56,6 +56,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # React app's address
     "http://127.0.0.1:5500",
+    "https://potential-customers-for-upcell.vercel.app"
 ]
 
 
