@@ -139,6 +139,8 @@ A comprehensive **customer intelligence platform** that leverages **machine lear
 
 ## 🏗️ Architecture Diagram
 
+![alt text](<WhatsApp Image 2025-09-03 at 09.08.56.jpeg>)
+
 ```text
 ┌──────────────────┐    HTTP/JSON    ┌─────────────────┐    SQL   ┌─────────────────┐  
 │  React Frontend  │ ◄─────────────► │   Django API    │ ◄───────►│   Database      │  
