@@ -14,30 +14,52 @@ import {
   IndianRupee,
 } from "lucide-react";
 import "../../assets/css/main.css";
+import { API_BASE_URL } from '../config';
 
 import { Chart as ChartJS } from "chart.js/auto"; // ✅ auto-registers all chart types & plugins
 import { Chart } from "react-chartjs-2"; // ✅ wrapper from react-chartjs-2
 
+console.log("API Base URL:", API_BASE_URL);
+
+// -------- API calls --------
 // -------- API calls --------
 const fetchSummaryMetrics = async () => {
-  const response = await fetch("http://127.0.0.1:8000/dashboard/summary-metrics/");
+  const response = await fetch(
+    "https://actual-hamster-renewing.ngrok-free.app/dashboard/summary-metrics/",
+    {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+      },
+    }
+  );
   return await response.json();
 };
 
 const fetchChurnTrend = async () => {
-  const response = await fetch("http://127.0.0.1:8000/dashboard/churn-trend/");
+  const response = await fetch(`${API_BASE_URL}/dashboard/churn-trend/`, {
+    method: "GET",
+    headers: { "Accept": "application/json" },
+  });
   return await response.json();
 };
 
 const fetchQuickInsights = async () => {
-  const response = await fetch("http://127.0.0.1:8000/dashboard/quick-insights/");
+  const response = await fetch(`${API_BASE_URL}/dashboard/quick-insights/`, {
+    method: "GET",
+    headers: { "Accept": "application/json" },
+  });
   return await response.json();
 };
 
 const fetchCustomerSegments = async () => {
-  const response = await fetch("http://127.0.0.1:8000/dashboard/customer-segments/");
+  const response = await fetch(`${API_BASE_URL}/dashboard/customer-segments/`, {
+    method: "GET",
+    headers: { "Accept": "application/json" },
+  });
   return await response.json();
 };
+
 
 const Dashboard = () => {
   const [churnChartData, setChurnChartData] = useState(null);
